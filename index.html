@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zillion Homes | Homes & Apartments</title>
+  <link rel="icon" type="image/png" href="logo-icon.png" />
+  <meta name="description" content="Search homes and apartments for sale or rent with Zillion Homes." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        colors: { brand: { DEFAULT: '#006AFF', dark: '#0050C8', light: '#E8F1FF' } },
+        fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+      } }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+    .hero-bg {
+      background-image: linear-gradient(rgba(8,20,45,.58), rgba(8,20,45,.58)), url('hero.jpg');
+      background-size: cover; background-position: center; background-color: #1e3a5f;
+    }
+    .ph { background: linear-gradient(135deg, #dbe7f7, #b9cfe9); }
+    .chip-on { background: #006AFF; color: #fff; border-color: #006AFF; }
+    .thumb-on { outline: 3px solid #006AFF; outline-offset: -3px; opacity: 1 !important; }
+    .strip { scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .strip::-webkit-scrollbar { display: none; }
+    .arrow { background: rgba(255,255,255,.92); }
+    .arrow:active { transform: translateY(-50%) scale(.92); }
+    .sg-active { background: #E8F1FF; }
+  </style>
+</head>
+<body class="font-sans text-slate-800 bg-slate-50 antialiased">
+
+  <!-- 1. STICKY HEADER -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
+      <a href="#top" class="flex items-center gap-2 shrink-0">
+        <img src="logo-icon.png" alt="Zillion Homes logo" class="h-10 w-auto" onerror="this.style.display='none'" />
+        <span class="text-lg sm:text-xl font-extrabold text-brand tracking-tight">Zillion Homes</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
+        <a href="#listings" data-go="buy" class="hover:text-brand">Buy</a>
+        <a href="#listings" data-go="rent" class="hover:text-brand">Rent</a>
+        <a href="#listings" class="hover:text-brand">Listings</a>
+        <a href="#" data-page="about" class="hover:text-brand">About</a>
+        <a href="#contact" class="hover:text-brand">Contact</a>
+      </nav>
+      <div class="flex items-center gap-2">
+        <a href="#contact" class="postlink bg-brand hover:bg-brand-dark text-white text-xs sm:text-sm font-bold px-3.5 sm:px-5 py-2 rounded-full whitespace-nowrap">Post a Listing</a>
+        <button id="menuBtn" class="md:hidden p-2 rounded-lg hover:bg-slate-100" aria-label="Open menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 bg-white">
+      <div class="px-4 py-2 flex flex-col text-sm font-semibold">
+        <a href="#listings" data-go="buy" class="py-3 border-b border-slate-100">Buy</a>
+        <a href="#listings" data-go="rent" class="py-3 border-b border-slate-100">Rent</a>
+        <a href="#listings" class="py-3 border-b border-slate-100">Listings</a>
+        <a href="#" data-page="about" class="py-3 border-b border-slate-100">About</a>
+        <a href="#contact" class="py-3">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- 2. HERO -->
+    <section class="hero-bg">
+      <div class="max-w-6xl mx-auto px-4 py-20 sm:py-32 text-center">
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">Find a place you'll love to call home</h1>
+        <p class="mt-4 text-base sm:text-lg text-white/90 max-w-2xl mx-auto">Search homes and apartments for sale or rent.</p>
+
+        <div class="relative mt-8 max-w-2xl mx-auto text-left">
+          <form id="searchForm" autocomplete="off" class="bg-white rounded-full shadow-2xl flex items-center p-1.5 sm:p-2">
+            <svg class="w-5 h-5 text-slate-400 ml-3 sm:ml-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M21 21l-4.3-4.3"/></svg>
+            <input id="searchInput" type="text" autocomplete="off" autocorrect="off" spellcheck="false"
+                   placeholder="City, state, ZIP or address"
+                   class="flex-1 min-w-0 px-3 py-3 text-sm sm:text-base text-slate-800 placeholder-slate-400 bg-transparent focus:outline-none" />
+            <button type="button" id="clearBtn" aria-label="Clear search" class="hidden shrink-0 w-8 h-8 mr-1 rounded-full text-slate-400 hover:bg-slate-100 flex items-center justify-center">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+            <button type="submit" class="bg-brand hover:bg-brand-dark text-white font-semibold px-5 sm:px-8 py-3 rounded-full text-sm sm:text-base">Search</button>
+          </form>
+          <ul id="suggest" role="listbox" class="hidden absolute left-0 right-0 top-full mt-2 bg-white text-slate-800 rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-40 max-h-80 overflow-y-auto"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. CATEGORY FILTERS -->
+    <section class="bg-white border-b border-slate-200">
+      <div class="max-w-6xl mx-auto px-4 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-center gap-4 sm:gap-10">
+        <div class="flex items-center gap-2 overflow-x-auto" id="statusGroup">
+          <span class="text-xs font-bold uppercase tracking-wide text-slate-400 mr-1">Status</span>
+          <button data-status="all"  class="chip chip-on px-5 py-2 rounded-full border border-slate-300 text-sm font-semibold">All</button>
+          <button data-status="buy"  class="chip px-5 py-2 rounded-full border border-slate-300 text-sm font-semibold hover:border-brand hover:text-brand">Buy</button>
+          <button data-status="rent" class="chip px-5 py-2 rounded-full border border-slate-300 text-sm font-semibold hover:border-brand hover:text-brand">Rent</button>
+        </div>
+        <div class="flex items-center gap-2 overflow-x-auto" id="typeGroup">
+          <span class="text-xs font-bold uppercase tracking-wide text-slate-400 mr-1">Type</span>
+          <button data-type="all"       class="chip chip-on px-5 py-2 rounded-full border border-slate-300 text-sm font-semibold">All</button>
+          <button data-type="house"     class="chip px-5 py-2 rounded-full border border-slate-300 text-sm font-semibold hover:border-brand hover:text-brand">House</button>
+          <button data-type="apartment" class="chip px-5 py-2 rounded-full border border-slate-300 text-sm font-semibold hover:border-brand hover:text-brand">Apartment</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. FEATURED LISTINGS -->
+    <section id="listings" class="max-w-6xl mx-auto px-4 py-12 sm:py-16">
+      <div class="flex items-end justify-between gap-4 mb-8">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold">Featured Listings</h2>
+          <p class="text-slate-500 mt-1">Tap the arrows or swipe to browse every photo.</p>
+        </div>
+        <p id="count" class="text-sm font-semibold text-slate-500 shrink-0"></p>
+      </div>
+
+      <div id="areaNotice" class="hidden mb-6 bg-brand-light border border-blue-200 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <p id="areaMsg" class="text-sm sm:text-base font-semibold text-slate-700"></p>
+        <a href="#contact" id="areaCta" class="shrink-0 text-center bg-brand hover:bg-brand-dark text-white text-sm font-bold px-5 py-2.5 rounded-full">Tell us what you need</a>
+      </div>
+
+      <div id="grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
+      <p id="noResults" class="hidden text-center text-slate-500 mt-10">No properties match your filters. Try a different search.</p>
+    </section>
+
+    <!-- ABOUT STRIP -->
+    <section id="about" class="bg-brand-light">
+      <div class="max-w-6xl mx-auto px-4 py-12 grid gap-6 sm:grid-cols-3 text-center">
+        <div><p class="text-3xl font-extrabold text-brand">Simple</p><p class="mt-1 text-sm text-slate-600">Browse and filter in seconds, right from your phone.</p></div>
+        <div><p class="text-3xl font-extrabold text-brand">Direct</p><p class="mt-1 text-sm text-slate-600">Send an inquiry and get a personal reply.</p></div>
+        <div><p class="text-3xl font-extrabold text-brand">Local</p><p class="mt-1 text-sm text-slate-600">Properties across Wisconsin and Texas.</p></div>
+      </div>
+    </section>
+
+    <!-- 5. CONTACT FORM -->
+    <section id="contact" class="bg-white border-t border-slate-200">
+      <div class="max-w-2xl mx-auto px-4 py-12 sm:py-16">
+        <div class="text-center mb-8">
+          <h2 class="text-2xl sm:text-3xl font-extrabold">Request Information</h2>
+          <p class="text-slate-500 mt-2">Interested in a property, or want to post your own? Send a message and we'll reply shortly.</p>
+        </div>
+        <form action="https://api.web3forms.com/submit" method="POST" class="bg-slate-50 border border-slate-200 rounded-2xl p-5 sm:p-8 shadow-sm space-y-5">
+          <input type="hidden" name="access_key" value="7cee38e4-b902-4260-bb76-15d48ff4e69d" />
+          <input type="hidden" name="subject" value="New inquiry from Zillion Homes website" />
+          <input type="hidden" name="from_name" value="Zillion Homes Website" />
+          <input type="checkbox" name="botcheck" class="hidden" style="display:none;" />
+          <div>
+            <label for="name" class="block text-sm font-semibold mb-1.5">Full Name</label>
+            <input id="name" name="name" type="text" required placeholder="Jane Smith" class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand" />
+          </div>
+          <div class="grid sm:grid-cols-2 gap-5">
+            <div>
+              <label for="email" class="block text-sm font-semibold mb-1.5">Email</label>
+              <input id="email" name="email" type="email" required placeholder="you@email.com" class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand" />
+            </div>
+            <div>
+              <label for="phone" class="block text-sm font-semibold mb-1.5">Phone</label>
+              <input id="phone" name="phone" type="tel" placeholder="(555) 123-4567" class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand" />
+            </div>
+          </div>
+          <div>
+            <label for="property" class="block text-sm font-semibold mb-1.5">I'm interested in</label>
+            <select id="property" name="property" required class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand"></select>
+          </div>
+          <div>
+            <label for="message" class="block text-sm font-semibold mb-1.5">Message</label>
+            <textarea id="message" name="message" rows="5" required placeholder="Tell us how we can help..." class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand"></textarea>
+          </div>
+          <button type="submit" class="w-full bg-brand hover:bg-brand-dark text-white font-bold py-3.5 rounded-lg shadow-md transition">Send Inquiry</button>
+          <p class="text-xs text-center text-slate-400">Your information is only used to respond to your inquiry.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- 6. FOOTER -->
+  <footer class="bg-slate-900 text-slate-400">
+    <div class="max-w-6xl mx-auto px-4 py-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      <div>
+        <p class="text-white font-extrabold text-xl">Zillion Homes</p>
+        <p class="mt-3 text-sm">Homes and apartments for sale and rent.</p>
+        <div class="flex gap-3 mt-5">
+          <a href="#" aria-label="Facebook" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-brand flex items-center justify-center">
+            <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.5 1.6-1.5h1.7V4.4c-.3 0-1.3-.1-2.4-.1-2.4 0-4.1 1.5-4.1 4.2v2.3H7.5V14h2.8v8h3.2z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-brand flex items-center justify-center">
+            <svg class="w-4 h-4" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="white"/></svg>
+          </a>
+          <a href="#" aria-label="X" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-brand flex items-center justify-center">
+            <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M17.8 3h3.1l-6.8 7.7L22 21h-6.2l-4.9-6.3L5.3 21H2.2l7.3-8.3L2 3h6.3l4.4 5.8L17.8 3zm-1.1 16.2h1.7L7.4 4.7H5.6l11.1 14.5z"/></svg>
+          </a>
+          <a href="#" aria-label="LinkedIn" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-brand flex items-center justify-center">
+            <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.01 5 2.5 2.5 0 01.01-5zM3 9.5h4V21H3V9.5zm6.5 0h3.8v1.6h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6.1V21h-4v-5.1c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4V9.5z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <p class="text-white font-bold mb-3">Explore</p>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#listings" data-go="buy" class="hover:text-white">Homes for Sale</a></li>
+          <li><a href="#listings" data-go="rent" class="hover:text-white">Rentals</a></li>
+          <li><a href="#contact" class="postlink hover:text-white">Post a Listing</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-white font-bold mb-3">Company</p>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" data-page="about" class="hover:text-white">About Us</a></li>
+          <li><a href="#contact" class="hover:text-white">Contact</a></li>
+          <li><a href="#" data-page="careers" class="hover:text-white">Careers</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-white font-bold mb-3">Legal</p>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" data-page="privacy" class="hover:text-white">Privacy Policy</a></li>
+          <li><a href="#" data-page="terms" class="hover:text-white">Terms of Use</a></li>
+          <li><a href="#" data-page="fair" class="hover:text-white">Fair Housing</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-slate-800 py-5 text-center text-xs px-4">
+      &copy; <span id="year"></span> Zillion Homes. All rights reserved. Equal Housing Opportunity.
+    </div>
+  </footer>
+
+  <!-- POP-UP FOR ABOUT / CAREERS / LEGAL PAGES -->
+  <div id="modal" class="fixed inset-0 z-[60] hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div id="modalBg" class="absolute inset-0 bg-slate-900/60"></div>
+    <div class="relative h-full flex items-end sm:items-center justify-center sm:p-6 pointer-events-none">
+      <div class="pointer-events-auto bg-white w-full sm:max-w-2xl max-h-[88vh] rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col">
+        <div class="flex items-center justify-between px-5 py-4 border-b border-slate-200">
+          <h3 id="modalTitle" class="text-lg font-extrabold"></h3>
+          <button id="modalClose" aria-label="Close" class="w-9 h-9 rounded-full hover:bg-slate-100 flex items-center justify-center">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+        <div id="modalBody" class="px-5 py-5 overflow-y-auto text-sm text-slate-600 leading-relaxed space-y-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =====================================================
+    //  SETTINGS: your GitHub repo (used to find your photos)
+    //  Change 'zillion-homes' if your repo has a different name
+    // =====================================================
+    const GH = { owner: 'andrespuente778-cloud', repo: 'zillion-homes', branch: 'main' };
+
+    // =====================================================
+    //  LISTING DATA  (add new listings here)
+    //  prefix = start of the photo file names (house1, house2, ...)
+    //  fallback = how many clean-named photos (house1_1.jpg ...) to try if auto-detect fails
+    // =====================================================
+    const listings = [
+      { id: 1, prefix: 'house1', fallback: 22, status: 'buy',  type: 'house',     price: '$30,000',
+        beds: '3', baths: '2', address: 'W Seneca Dr, Appleton, WI 54914', city: 'Appleton', abbr: 'WI', zip: '54914',
+        desc: 'Three-bedroom home with two full baths, a great opportunity for first-time buyers or investors.' },
+      { id: 2, prefix: 'house2', fallback: 11, status: 'rent', type: 'apartment', price: '$1,311', per: '/mo',
+        beds: '1', baths: '1', address: 'Adleta Blvd, Dallas, TX', city: 'Dallas', abbr: 'TX', zip: '',
+        desc: 'Comfortable one-bedroom apartment with a convenient Dallas location and easy access to major roads.' },
+      { id: 3, prefix: 'house3', fallback: 12, status: 'rent', type: 'apartment', price: '$1,500', per: '/mo',
+        beds: '2', baths: '1', address: 'Melody Parc, 5951 Melody Ln, Dallas, TX', city: 'Dallas', abbr: 'TX', zip: '',
+        desc: 'Spacious two-bedroom apartment at Melody Parc, a great fit for roommates or small families.' }
+    ];
+
+    // US states + a short offline fallback list of cities
+    const ST = {};
+    'Alabama:AL,Alaska:AK,Arizona:AZ,Arkansas:AR,California:CA,Colorado:CO,Connecticut:CT,Delaware:DE,Florida:FL,Georgia:GA,Hawaii:HI,Idaho:ID,Illinois:IL,Indiana:IN,Iowa:IA,Kansas:KS,Kentucky:KY,Louisiana:LA,Maine:ME,Maryland:MD,Massachusetts:MA,Michigan:MI,Minnesota:MN,Mississippi:MS,Missouri:MO,Montana:MT,Nebraska:NE,Nevada:NV,New Hampshire:NH,New Jersey:NJ,New Mexico:NM,New York:NY,North Carolina:NC,North Dakota:ND,Ohio:OH,Oklahoma:OK,Oregon:OR,Pennsylvania:PA,Rhode Island:RI,South Carolina:SC,South Dakota:SD,Tennessee:TN,Texas:TX,Utah:UT,Vermont:VT,Virginia:VA,Washington:WA,West Virginia:WV,Wisconsin:WI,Wyoming:WY,District of Columbia:DC'
+      .split(',').forEach(s => { const [n, a] = s.split(':'); ST[n] = a; });
+    const stateName = abbr => Object.keys(ST).find(k => ST[k] === abbr) || abbr;
+
+    const FALLBACK_CITIES = 'New York,NY;Los Angeles,CA;Chicago,IL;Houston,TX;Phoenix,AZ;Philadelphia,PA;San Antonio,TX;San Diego,CA;Dallas,TX;Austin,TX;Jacksonville,FL;San Jose,CA;Fort Worth,TX;Columbus,OH;Charlotte,NC;Indianapolis,IN;San Francisco,CA;Seattle,WA;Denver,CO;Washington,DC;Nashville,TN;Oklahoma City,OK;El Paso,TX;Boston,MA;Portland,OR;Las Vegas,NV;Detroit,MI;Memphis,TN;Louisville,KY;Baltimore,MD;Milwaukee,WI;Albuquerque,NM;Tucson,AZ;Sacramento,CA;Kansas City,MO;Atlanta,GA;Miami,FL;Minneapolis,MN;Tampa,FL;New Orleans,LA;Cleveland,OH;Appleton,WI;Green Bay,WI;Madison,WI;Plano,TX;Irving,TX;Arlington,TX;Orlando,FL;Raleigh,NC;Pittsburgh,PA'
+      .split(';').map(s => { const [name, abbr] = s.split(','); return { kind: 'city', name, abbr, state: stateName(abbr), label: `${name}, ${abbr}` }; });
+
+    const norm = s => (s || '').toLowerCase().replace(/,/g, ' ').replace(/\s+/g, ' ').trim();
+    listings.forEach(l => { l.hay = norm(`${l.address} ${l.city} ${l.abbr} ${stateName(l.abbr)} ${l.zip} ${l.type} ${l.status}`); });
+
+    // =====================================================
+    //  AUTO-FIND PHOTOS FROM YOUR GITHUB REPO
+    //  Works with messy names like house1:int1.jpg.jpg
+    // =====================================================
+    const IMG_RE = /\.(jpe?g|png|webp|heic|gif)\b/i;
+    const urlOf = name => encodeURIComponent(name);
+
+    function photoSort(prefix) {
+      const key = n => {
+        const rest = n.slice(prefix.length).replace(/^[^a-z0-9]+/i, '');
+        const kind = /^ext/i.test(rest) ? 0 : /^int/i.test(rest) ? 1 : 2;
+        const m = rest.match(/\d+/);
+        return [kind, m ? parseInt(m[0], 10) : 0];
+      };
+      return (a, b) => {
+        const ka = key(a), kb = key(b);
+        return ka[0] - kb[0] || ka[1] - kb[1] || a.localeCompare(b);
+      };
+    }
+
+    function fillFallback() {
+      listings.forEach(l => {
+        if (l.files && l.files.length) return;
+        l.files = Array.from({ length: l.fallback }, (_, i) => `${l.prefix}_${i + 1}.jpg`);
+      });
+    }
+
+    async function discover() {
+      let names = [];
+      try { names = JSON.parse(sessionStorage.getItem('zh-files') || '[]'); } catch (e) {}
+      if (!names.length) {
+        try {
+          const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents?ref=${GH.branch}`);
+          if (r.ok) {
+            const d = await r.json();
+            names = d.filter(x => x.type === 'file' && IMG_RE.test(x.name)).map(x => x.name);
+            try { sessionStorage.setItem('zh-files', JSON.stringify(names)); } catch (e) {}
+          }
+        } catch (e) {}
+      }
+      listings.forEach(l => {
+        const re = new RegExp('^' + l.prefix + '(?![0-9])', 'i');
+        const found = names.filter(n => re.test(n)).sort(photoSort(l.prefix));
+        l.files = found.map(urlOf);
+      });
+      fillFallback();
+      const hero = names.find(n => /^hero/i.test(n));
+      if (hero) {
+        document.querySelector('.hero-bg').style.backgroundImage =
+          `linear-gradient(rgba(8,20,45,.58), rgba(8,20,45,.58)), url('${urlOf(hero)}')`;
+      }
+    }
+
+    // =====================================================
+    //  LISTING CARDS + GALLERY SLIDER
+    // =====================================================
+    const grid = document.getElementById('grid');
+    const noResults = document.getElementById('noResults');
+    const count = document.getElementById('count');
+    const label = { buy: 'For Sale', rent: 'For Rent' };
+    const state = {};
+
+    const chevL = '<svg class="w-5 h-5" fill="none" stroke="#0f172a" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 5l-7 7 7 7"/></svg>';
+    const chevR = '<svg class="w-5 h-5" fill="none" stroke="#0f172a" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>';
+
+    function card(l) {
+      state[l.id] = 0;
+      const n = l.files.length;
+      const thumbs = l.files.map((f, i) => `
+        <button type="button" data-id="${l.id}" data-i="${i}" aria-label="Photo ${i + 1}"
+                class="thumb ph shrink-0 w-16 h-12 rounded-md overflow-hidden opacity-70 hover:opacity-100 ${i === 0 ? 'thumb-on' : ''}">
+          <img src="${f}" alt="" class="w-full h-full object-cover" loading="lazy" onerror="this.style.opacity=0" />
+        </button>`).join('');
+
+      return `
+      <article class="listing bg-white rounded-2xl shadow-sm hover:shadow-xl transition overflow-hidden border border-slate-200 flex flex-col" data-id="${l.id}">
+        <div class="gallery relative ph select-none" data-id="${l.id}">
+          <img id="main-${l.id}" src="${l.files[0]}" alt="Photo 1 of ${l.address}" class="w-full h-60 sm:h-56 object-cover" onerror="this.style.opacity=0" draggable="false" />
+          <span class="absolute top-3 left-3 bg-white text-xs font-bold px-3 py-1 rounded-full shadow">${label[l.status]}</span>
+          <span class="absolute top-3 right-3 bg-slate-900/70 text-white text-xs font-semibold px-3 py-1 rounded-full capitalize">${l.type}</span>
+          <button type="button" data-id="${l.id}" data-dir="-1" aria-label="Previous photo"
+                  class="arrow absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full shadow flex items-center justify-center">${chevL}</button>
+          <button type="button" data-id="${l.id}" data-dir="1" aria-label="Next photo"
+                  class="arrow absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full shadow flex items-center justify-center">${chevR}</button>
+          <span id="counter-${l.id}" class="absolute bottom-3 right-3 bg-black/65 text-white text-xs font-semibold px-2.5 py-1 rounded-full">1 / ${n}</span>
+        </div>
+        <div id="strip-${l.id}" class="strip flex gap-1.5 overflow-x-auto p-2 bg-white">${thumbs}</div>
+        <div class="px-5 pb-5 pt-2 flex flex-col flex-1">
+          <p class="text-2xl font-extrabold">${l.price}<span class="text-sm font-medium text-slate-500">${l.per || ''}</span></p>
+          <p class="mt-1 text-sm font-semibold text-slate-700">${l.beds} bd &nbsp;|&nbsp; ${l.baths} ba</p>
+          <p class="mt-1 text-sm text-slate-500">${l.address}</p>
+          <p class="mt-3 text-sm text-slate-600 flex-1">${l.desc}</p>
+          <a href="#contact" data-pick="${l.id}" class="pick mt-4 block text-center bg-brand-light text-brand font-semibold py-2.5 rounded-lg hover:bg-brand hover:text-white transition">Inquire</a>
+        </div>
+      </article>`;
+    }
+
+    let rendered = false;
+    function renderAll() {
+      grid.innerHTML = listings.map(card).join('');
+      rendered = true;
+      applyFilters();
+    }
+    grid.innerHTML = '<p class="col-span-full text-center text-slate-500 py-10">Loading listings…</p>';
+    discover().then(renderAll);
+    setTimeout(() => { if (!rendered) { fillFallback(); renderAll(); } }, 4000);
+
+    function show(id, index) {
+      const l = listings.find(x => x.id === id);
+      const n = l.files.length;
+      index = (index + n) % n;
+      state[id] = index;
+
+      const main = document.getElementById('main-' + id);
+      main.style.opacity = 1;
+      main.src = l.files[index];
+      main.alt = `Photo ${index + 1} of ${l.address}`;
+      document.getElementById('counter-' + id).textContent = `${index + 1} / ${n}`;
+
+      const strip = document.getElementById('strip-' + id);
+      strip.querySelectorAll('.thumb').forEach((t, i) => t.classList.toggle('thumb-on', i === index));
+      const t = strip.children[index];
+      strip.scrollTo({ left: t.offsetLeft - strip.clientWidth / 2 + t.clientWidth / 2, behavior: 'smooth' });
+
+      [index + 1, index - 1].forEach(j => { new Image().src = l.files[(j + n) % n]; });
+    }
+
+    grid.addEventListener('click', e => {
+      const arrow = e.target.closest('.arrow');
+      if (arrow) { const id = +arrow.dataset.id; show(id, state[id] + +arrow.dataset.dir); return; }
+      const thumb = e.target.closest('.thumb');
+      if (thumb) show(+thumb.dataset.id, +thumb.dataset.i);
+    });
+
+    let startX = 0, startY = 0;
+    grid.addEventListener('touchstart', e => {
+      if (!e.target.closest('.gallery')) return;
+      startX = e.touches[0].clientX; startY = e.touches[0].clientY;
+    }, { passive: true });
+    grid.addEventListener('touchend', e => {
+      const g = e.target.closest('.gallery');
+      if (!g || e.target.closest('.arrow')) return;
+      const dx = e.changedTouches[0].clientX - startX;
+      const dy = e.changedTouches[0].clientY - startY;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+        const id = +g.dataset.id;
+        show(id, state[id] + (dx < 0 ? 1 : -1));
+      }
+    }, { passive: true });
+
+    // =====================================================
+    //  FILTERS + AREA MATCHING
+    // =====================================================
+    let status = 'all', type = 'all', place = null, q = '';
+    const areaNotice = document.getElementById('areaNotice');
+    const areaMsg = document.getElementById('areaMsg');
+
+    function matchPlace(l, p) {
+      if (p.kind === 'state') return l.abbr === p.abbr;
+      if (p.kind === 'zip') return (l.zip && l.zip === p.zip) || (l.city.toLowerCase() === p.name.toLowerCase() && l.abbr === p.abbr);
+      return l.city.toLowerCase() === p.name.toLowerCase() && l.abbr === p.abbr;
+    }
+
+    function applyFilters() {
+      if (!document.querySelector('.listing')) return;
+      const base = l => (status === 'all' || l.status === status) && (type === 'all' || l.type === type);
+      const area = l => place ? matchPlace(l, place) : (!q || l.hay.includes(q));
+      const areaActive = !!(place || q);
+      const matches = listings.filter(l => base(l) && area(l));
+      const showAll = areaActive && matches.length === 0;
+
+      let shown = 0;
+      document.querySelectorAll('.listing').forEach(c => {
+        const l = listings.find(x => x.id == c.dataset.id);
+        const ok = base(l) && (showAll || area(l));
+        c.classList.toggle('hidden', !ok);
+        if (ok) shown++;
+      });
+
+      const where = place ? place.label : `"${document.getElementById('searchInput').value.trim()}"`;
+      areaNotice.classList.toggle('hidden', !showAll);
+      if (showAll) areaMsg.textContent = `We don't have listings in ${where} yet. Here's what's available right now, or tell us what you're looking for and we'll keep an eye out.`;
+
+      noResults.classList.toggle('hidden', shown > 0);
+      count.textContent = shown + (shown === 1 ? ' property' : ' properties');
+    }
+
+    function setStatus(v) {
+      status = v;
+      document.querySelectorAll('#statusGroup .chip').forEach(x => x.classList.toggle('chip-on', x.dataset.status === v));
+      applyFilters();
+    }
+    document.getElementById('statusGroup').addEventListener('click', e => {
+      const b = e.target.closest('.chip'); if (b) setStatus(b.dataset.status);
+    });
+    document.getElementById('typeGroup').addEventListener('click', e => {
+      const b = e.target.closest('.chip'); if (!b) return;
+      type = b.dataset.type;
+      document.querySelectorAll('#typeGroup .chip').forEach(x => x.classList.toggle('chip-on', x === b));
+      applyFilters();
+    });
+
+    // Buy / Rent shortcuts in header and footer
+    document.addEventListener('click', e => {
+      const a = e.target.closest('[data-go]');
+      if (!a) return;
+      e.preventDefault();
+      setStatus(a.dataset.go);
+      document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // =====================================================
+    //  SEARCH WITH US CITY / STATE / ZIP SUGGESTIONS
+    // =====================================================
+    const inp = document.getElementById('searchInput');
+    const sg = document.getElementById('suggest');
+    const clearBtn = document.getElementById('clearBtn');
+    let current = [], activeIdx = -1, timer = null, ctrl = null;
+
+    const pinIcon = '<svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>';
+
+    async function remote(text) {
+      if (ctrl) ctrl.abort();
+      ctrl = new AbortController();
+      const raw = text.trim();
+      if (/^\d{5}$/.test(raw)) {
+        const r = await fetch(`https://api.zippopotam.us/us/${raw}`, { signal: ctrl.signal });
+        if (!r.ok) return [];
+        const d = await r.json();
+        return (d.places || []).slice(0, 1).map(p => ({
+          kind: 'zip', name: p['place name'], abbr: p['state abbreviation'], state: p.state, zip: raw,
+          label: `${p['place name']}, ${p['state abbreviation']} ${raw}`
+        }));
+      }
+      const name = raw.split(',')[0].trim();
+      if (name.length < 2) return [];
+      const r = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(name)}&count=10&language=en&format=json&countryCode=US`, { signal: ctrl.signal });
+      if (!r.ok) return [];
+      const d = await r.json();
+      return (d.results || [])
+        .filter(x => (x.feature_code || '').startsWith('PPL') && ST[x.admin1])
+        .map(x => ({ kind: 'city', name: x.name, abbr: ST[x.admin1], state: x.admin1, label: `${x.name}, ${ST[x.admin1]}` }));
+    }
+
+    function fallbackMatches(text) {
+      const t = text.split(',')[0].trim().toLowerCase();
+      return FALLBACK_CITIES.filter(c => c.name.toLowerCase().startsWith(t));
+    }
+
+    function build(text, extra) {
+      const t = text.split(',')[0].trim().toLowerCase();
+      const out = [], seen = new Set();
+      const add = p => { if (!seen.has(p.label)) { seen.add(p.label); out.push(p); } };
+      listings.forEach(l => {
+        if (l.city.toLowerCase().startsWith(t)) add({ kind: 'city', name: l.city, abbr: l.abbr, state: stateName(l.abbr), label: `${l.city}, ${l.abbr}` });
+        if (l.zip && t.length >= 3 && l.zip.startsWith(t)) add({ kind: 'zip', name: l.city, abbr: l.abbr, state: stateName(l.abbr), zip: l.zip, label: `${l.city}, ${l.abbr} ${l.zip}` });
+      });
+      if (t.length >= 2) Object.keys(ST).filter(s => s.toLowerCase().startsWith(t)).forEach(s => add({ kind: 'state', name: s, abbr: ST[s], state: s, label: s }));
+      extra.forEach(add);
+      return out.slice(0, 7);
+    }
+
+    function renderSuggest(list) {
+      current = list; activeIdx = -1;
+      if (!list.length) { sg.classList.add('hidden'); sg.innerHTML = ''; return; }
+      sg.innerHTML = list.map((p, i) => {
+        const n = listings.filter(l => matchPlace(l, p)).length;
+        const badge = n
+          ? `<span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full whitespace-nowrap">${n} listing${n > 1 ? 's' : ''}</span>`
+          : `<span class="text-xs font-medium text-slate-400 whitespace-nowrap">No listings yet</span>`;
+        const sub = p.kind === 'state' ? 'State' : p.kind === 'zip' ? 'ZIP code' : stateName(p.abbr);
+        return `<li role="option" data-i="${i}" class="sg-item flex items-center justify-between gap-3 px-4 py-3 cursor-pointer hover:bg-brand-light border-b border-slate-100 last:border-0">
+          <span class="flex items-center gap-3 min-w-0">${pinIcon}<span class="min-w-0"><span class="block text-sm font-semibold truncate">${p.label}</span><span class="block text-xs text-slate-400">${sub}</span></span></span>${badge}</li>`;
+      }).join('');
+      sg.classList.remove('hidden');
+    }
+    const hideSuggest = () => { sg.classList.add('hidden'); activeIdx = -1; };
+
+    function choose(p) {
+      place = p; q = '';
+      inp.value = p.label;
+      clearBtn.classList.remove('hidden');
+      hideSuggest();
+      applyFilters();
+      document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    inp.addEventListener('input', () => {
+      const v = inp.value.trim();
+      clearBtn.classList.toggle('hidden', !v);
+      const hadFilter = place || q;
+      place = null; q = '';
+      if (hadFilter) applyFilters();
+      if (!v) { hideSuggest(); return; }
+      renderSuggest(build(v, []));
+      clearTimeout(timer);
+      timer = setTimeout(async () => {
+        let extra = [];
+        try { extra = await remote(v); } catch (e) { if (e.name === 'AbortError') return; }
+        if (!extra.length) extra = fallbackMatches(v);
+        if (inp.value.trim() === v) renderSuggest(build(v, extra));
+      }, 250);
+    });
+
+    inp.addEventListener('keydown', e => {
+      if (sg.classList.contains('hidden') || !current.length) return;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        activeIdx = (activeIdx + (e.key === 'ArrowDown' ? 1 : -1) + current.length) % current.length;
+        sg.querySelectorAll('.sg-item').forEach((li, i) => li.classList.toggle('sg-active', i === activeIdx));
+      } else if (e.key === 'Escape') hideSuggest();
+    });
+
+    sg.addEventListener('mousedown', e => e.preventDefault());
+    sg.addEventListener('click', e => {
+      const li = e.target.closest('.sg-item');
+      if (li) choose(current[+li.dataset.i]);
+    });
+    document.addEventListener('click', e => { if (!e.target.closest('#suggest') && e.target !== inp) hideSuggest(); });
+
+    document.getElementById('searchForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const v = inp.value.trim();
+      if (!v) { place = null; q = ''; applyFilters(); return; }
+      if (activeIdx >= 0 && current[activeIdx]) return choose(current[activeIdx]);
+      const first = current[0];
+      if (first && first.label.toLowerCase().startsWith(v.toLowerCase())) return choose(first);
+      place = null; q = norm(v);
+      hideSuggest();
+      applyFilters();
+      document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    clearBtn.addEventListener('click', () => {
+      inp.value = ''; place = null; q = '';
+      clearBtn.classList.add('hidden');
+      hideSuggest(); applyFilters(); inp.focus();
+    });
+
+    // =====================================================
+    //  CONTACT FORM DROPDOWN
+    // =====================================================
+    const sel = document.getElementById('property');
+    const msg = document.getElementById('message');
+    const optText = l => `${l.address} - ${l.price}${l.per || ''}`;
+    sel.innerHTML = '<option value="" disabled selected>Select an option</option>'
+      + listings.map(l => `<option value="${optText(l)}">${optText(l)}</option>`).join('')
+      + '<option value="Looking for a home in another area">Looking for a home in another area</option>'
+      + '<option value="General inquiry">General inquiry</option>'
+      + '<option value="I want to post a listing">I want to post a listing</option>';
+
+    grid.addEventListener('click', e => {
+      const p = e.target.closest('.pick');
+      if (p) sel.value = optText(listings.find(x => x.id == p.dataset.pick));
+    });
+    document.querySelectorAll('.postlink').forEach(a => a.addEventListener('click', () => { sel.value = 'I want to post a listing'; }));
+    document.getElementById('areaCta').addEventListener('click', () => {
+      sel.value = 'Looking for a home in another area';
+      const where = place ? place.label : inp.value.trim();
+      if (!msg.value.trim()) msg.value = `I'm looking for a place in ${where}. Please let me know if anything becomes available.`;
+    });
+
+    // =====================================================
+    //  POP-UP PAGES (About, Careers, Privacy, Terms, Fair Housing)
+    // =====================================================
+    const cta = '<a href="#contact" data-close class="inline-block mt-2 bg-brand text-white font-bold px-5 py-2.5 rounded-full">Contact us</a>';
+    const updated = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    const PAGES = {
+      about: { title: 'About Us', body: `
+        <p>Zillion Homes helps people find homes and apartments for sale or rent. Browse photos, filter by status and property type, and send an inquiry straight from your phone.</p>
+        <p>We currently feature properties in Wisconsin and Texas, and we are always looking to add more areas. If you don't see what you need, tell us where you're searching and we'll keep an eye out for you.</p>
+        <p>Every inquiry gets a personal reply.</p>${cta}` },
+      careers: { title: 'Careers', body: `
+        <p>We don't have any open positions right now, but we're always happy to hear from people who love real estate and helping others find a home.</p>
+        <p>Send us a message through the contact form, tell us a bit about yourself, and we'll be in touch if something opens up.</p>${cta}` },
+      privacy: { title: 'Privacy Policy', body: `
+        <p class="text-xs text-slate-400">Last updated: ${updated}</p>
+        <p><strong>What we collect.</strong> When you use our contact form, we receive the name, email address, phone number (optional), property of interest, and message you choose to send.</p>
+        <p><strong>How we use it.</strong> We use this information only to respond to your inquiry. We do not sell your personal information.</p>
+        <p><strong>Search suggestions.</strong> When you type in the search bar, the text you type may be sent to third-party lookup services so we can suggest US cities and ZIP codes.</p>
+        <p><strong>Your choices.</strong> To ask us to delete the information you sent us, contact us through the form on this page.</p>${cta}` },
+      terms: { title: 'Terms of Use', body: `
+        <p class="text-xs text-slate-400">Last updated: ${updated}</p>
+        <p><strong>General information.</strong> The listings, prices, photos, and descriptions on this site are provided for general information only. Properties may be rented, sold, or changed at any time, and we do not guarantee that any listing is still available or that its details are complete or error-free.</p>
+        <p><strong>No contract.</strong> Sending an inquiry does not create a lease, sale, or any other agreement. Any agreement must be made separately and in writing.</p>
+        <p><strong>Your use of the site.</strong> Please use this site lawfully and don't submit false, abusive, or misleading information.</p>
+        <p><strong>Content.</strong> Site content, logos, and photos belong to Zillion Homes or their respective owners and may not be copied or reused without permission.</p>
+        <p><strong>Limitation.</strong> To the fullest extent allowed by law, we are not liable for losses arising from your use of this site or reliance on its information.</p>
+        <p><strong>Changes.</strong> We may update these terms from time to time. Continued use of the site means you accept the updated terms.</p>${cta}` },
+      fair: { title: 'Fair Housing', body: `
+        <p><strong>Equal Housing Opportunity.</strong> We are committed to following the federal Fair Housing Act, which prohibits discrimination in the sale, rental, and financing of housing based on race, color, national origin, religion, sex, familial status, or disability. State and local laws may protect additional groups.</p>
+        <p>We welcome all applicants and inquiries and treat everyone equally.</p>
+        <p>If you believe you've experienced housing discrimination, you can file a complaint with the U.S. Department of Housing and Urban Development (HUD) at hud.gov/fairhousing or by calling 1-800-669-9777.</p>${cta}` }
+    };
+
+    const modal = document.getElementById('modal');
+    const mobileMenu = document.getElementById('mobileMenu');
+    function openPage(key) {
+      const p = PAGES[key]; if (!p) return;
+      document.getElementById('modalTitle').textContent = p.title;
+      document.getElementById('modalBody').innerHTML = p.body;
+      document.getElementById('modalBody').scrollTop = 0;
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() { modal.classList.add('hidden'); document.body.style.overflow = ''; }
+
+    document.addEventListener('click', e => {
+      const a = e.target.closest('[data-page]');
+      if (a) { e.preventDefault(); mobileMenu.classList.add('hidden'); openPage(a.dataset.page); return; }
+      if (e.target.closest('[data-close]')) closeModal();
+    });
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    document.getElementById('modalBg').addEventListener('click', closeModal);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // =====================================================
+    //  MOBILE MENU + YEAR
+    // =====================================================
+    document.getElementById('menuBtn').addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
