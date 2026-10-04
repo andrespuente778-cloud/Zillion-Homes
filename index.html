@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zillion Homes | Homes & Apartments</title>
+  <link rel="icon" type="image/png" href="logo-icon.png" />
+  <meta name="description" content="Search homes and apartments for sale or rent with Zillion Homes." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        colors: { brand: { DEFAULT: '#006AFF', dark: '#0050C8', light: '#E8F1FF' } },
+        fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+      } }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+    .hero-bg {
+      background-image: linear-gradient(rgba(8,20,45,.58), rgba(8,20,45,.58)), url('hero.jpg');
+      background-size: cover; background-position: center; background-color: #1e3a5f;
+    }
+    .ph { background: linear-gradient(135deg, #dbe7f7, #b9cfe9); }
+    .chip-on { background: #006AFF; color: #fff; border-color: #006AFF; }
+    .thumb-on { outline: 3px solid #006AFF; outline-offset: -3px; opacity: 1 !important; }
+    .strip { scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .strip::-webkit-scrollbar { display: none; }
+    .arrow { background: rgba(255,255,255,.92); }
+    .arrow:active { transform: translateY(-50%) scale(.92); }
+  </style>
+</head>
+<body class="font-sans text-slate-800 bg-slate-50 antialiased">
+
+  <!-- 1. STICKY HEADER -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
+      <a href="#top" class="flex items-center gap-2 shrink-0">
+        <img src="logo-icon.png" alt="Zillion Homes logo" class="h-10 w-auto" onerror="this.style.display='none'" />
+        <span class="text-lg sm:text-xl font-extrabold text-brand tracking-tight">Zillion Homes</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
+        <a href="#listings" class="hover:text-brand">Buy</a>
+        <a href="#listings" class="hover:text-brand">Rent</a>
+        <a href="#listings" class="hover:text-brand">Listings</a>
+        <a href="#about" class="hover:text-brand">About</a>
+        <a href="#contact" class="hover:text-brand">Contact</a>
+      </nav>
+      <div class="flex items-center gap-2">
+        <a href="#contact" id="postBtn" class="bg-brand hover:bg-brand-dark text-white text-xs sm:text-sm font-bold px-3.5 sm:px-5 py-2 rounded-full whitespace-nowrap">Post a Listing</a>
+        <button id="menuBtn" class="md:hidden p-2 rounded-lg hover:bg-slate-100" aria-label="Open menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 bg-white">
+      <div class="px-4 py-2 flex flex-col text-sm font-semibold">
+        <a href="#listings" class="py-3 border-b border-slate-100">Buy</a>
+        <a href="#listings" class="py-3 border-b border-slate-100">Rent</a>
+        <a href="#listings" class="py-3 border-b border-slate-100">Listings</a>
+        <a href="#about" class="py-3 border-b border-slate-100">About</a>
+        <a href="#contact" class="py-3">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- 2. HERO -->
+    <section class="hero-bg">
+      <div class="max-w-6xl mx-auto px-4 py-20 sm:py-32 text-center">
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">Find a place you'll love to call home</h1>
+        <p class="mt-4 text-base sm:text-lg text-white/90 max-w-2xl mx-auto">Search homes and apartments for sale or rent.</p>
+        <form id="searchForm" class="mt-8 max-w-2xl mx-auto bg-white rounded-full shadow-2xl flex items-center p-1.5 sm:p-2">
+          <svg class="w-5 h-5 text-slate-400 ml-3 sm:ml-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M21 21l-4.3-4.3"/></svg>
+          <input id="searchInput" type="text" placeholder="Enter an address, neighborhood, or ZIP code"
+                 class="flex-1 min-w-0 px-3 py-3 text-sm sm:text-base text-slate-800 placeholder-slate-400 bg-transparent focus:outline-none" />
+          <button type="submit" class="bg-brand hover:bg-brand-dark text-white font-semibold px-5 sm:px-8 py-3 rounded-full text-sm sm:text-base">Search</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- 3. CATEGORY FILTERS -->
+    <section class="bg-white border-b border-slate-200">
+      <div class="max-w-6xl mx-auto px-4 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-center gap-4 sm:gap-10">
+        <div class="flex items-center gap-2 overflow-x-auto" id="statusGroup">
+          <span class="text-xs font-bold uppercase tracking-wide text-slate-400 mr-1">Status</span>
+          <button data-status="all"  class="chip chip-on px-5 py-2 rounded-full border border-slate-300 text-sm font-semibold">All</button>
+          <button data-status="buy"  class="chip px-5 py-2 rounded-full border border-slate-300 text-sm font-semibold hover:border-brand hover:text-brand">Buy</button>
+          <button data-status="rent" class="chip px-5 py-2 rounded-full border border-slate-300 text-sm font-semibold hover:border-brand hover:text-brand">Rent</button>
+        </div>
+        <div class="flex items-center gap-2 overflow-x-auto" id="typeGroup">
+          <span class="text-xs font-bold uppercase tracking-wide text-slate-400 mr-1">Type</span>
+          <button data-type="all"       class="chip chip-on px-5 py-2 rounded-full border border-slate-300 text-sm font-semibold">All</button>
+          <button data-type="house"     class="chip px-5 py-2 rounded-full border border-slate-300 text-sm font-semibold hover:border-brand hover:text-brand">House</button>
+          <button data-type="apartment" class="chip px-5 py-2 rounded-full border border-slate-300 text-sm font-semibold hover:border-brand hover:text-brand">Apartment</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. FEATURED LISTINGS -->
+    <section id="listings" class="max-w-6xl mx-auto px-4 py-12 sm:py-16">
+      <div class="flex items-end justify-between mb-8">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold">Featured Listings</h2>
+          <p class="text-slate-500 mt-1">Tap the arrows or swipe to browse every photo.</p>
+        </div>
+        <p id="count" class="text-sm font-semibold text-slate-500"></p>
+      </div>
+      <div id="grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
+      <p id="noResults" class="hidden text-center text-slate-500 mt-10">No properties match your filters. Try a different search.</p>
+    </section>
+
+    <!-- ABOUT STRIP -->
+    <section id="about" class="bg-brand-light">
+      <div class="max-w-6xl mx-auto px-4 py-12 grid gap-6 sm:grid-cols-3 text-center">
+        <div><p class="text-3xl font-extrabold text-brand">Simple</p><p class="mt-1 text-sm text-slate-600">Browse and filter in seconds, right from your phone.</p></div>
+        <div><p class="text-3xl font-extrabold text-brand">Direct</p><p class="mt-1 text-sm text-slate-600">Send an inquiry and get a personal reply.</p></div>
+        <div><p class="text-3xl font-extrabold text-brand">Local</p><p class="mt-1 text-sm text-slate-600">Properties across Wisconsin and Texas.</p></div>
+      </div>
+    </section>
+
+    <!-- 5. CONTACT FORM -->
+    <section id="contact" class="bg-white border-t border-slate-200">
+      <div class="max-w-2xl mx-auto px-4 py-12 sm:py-16">
+        <div class="text-center mb-8">
+          <h2 class="text-2xl sm:text-3xl font-extrabold">Request Information</h2>
+          <p class="text-slate-500 mt-2">Interested in a property, or want to post your own? Send a message and we'll reply shortly.</p>
+        </div>
+        <form action="https://api.web3forms.com/submit" method="POST" class="bg-slate-50 border border-slate-200 rounded-2xl p-5 sm:p-8 shadow-sm space-y-5">
+          <input type="hidden" name="access_key" value="7cee38e4-b902-4260-bb76-15d48ff4e69d" />
+          <input type="hidden" name="subject" value="New inquiry from Zillion Homes website" />
+          <input type="hidden" name="from_name" value="Zillion Homes Website" />
+          <input type="checkbox" name="botcheck" class="hidden" style="display:none;" />
+          <div>
+            <label for="name" class="block text-sm font-semibold mb-1.5">Full Name</label>
+            <input id="name" name="name" type="text" required placeholder="Jane Smith" class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand" />
+          </div>
+          <div class="grid sm:grid-cols-2 gap-5">
+            <div>
+              <label for="email" class="block text-sm font-semibold mb-1.5">Email</label>
+              <input id="email" name="email" type="email" required placeholder="you@email.com" class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand" />
+            </div>
+            <div>
+              <label for="phone" class="block text-sm font-semibold mb-1.5">Phone</label>
+              <input id="phone" name="phone" type="tel" placeholder="(555) 123-4567" class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand" />
+            </div>
+          </div>
+          <div>
+            <label for="property" class="block text-sm font-semibold mb-1.5">I'm interested in</label>
+            <select id="property" name="property" required class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand"></select>
+          </div>
+          <div>
+            <label for="message" class="block text-sm font-semibold mb-1.5">Message</label>
+            <textarea id="message" name="message" rows="5" required placeholder="Tell us how we can help..." class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand"></textarea>
+          </div>
+          <button type="submit" class="w-full bg-brand hover:bg-brand-dark text-white font-bold py-3.5 rounded-lg shadow-md transition">Send Inquiry</button>
+          <p class="text-xs text-center text-slate-400">Your information is only used to respond to your inquiry.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- 6. FOOTER -->
+  <footer class="bg-slate-900 text-slate-400">
+    <div class="max-w-6xl mx-auto px-4 py-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      <div>
+        <p class="text-white font-extrabold text-xl">Zillion Homes</p>
+        <p class="mt-3 text-sm">Homes and apartments for sale and rent.</p>
+        <div class="flex gap-3 mt-5">
+          <a href="#" aria-label="Facebook" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-brand flex items-center justify-center">
+            <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.5 1.6-1.5h1.7V4.4c-.3 0-1.3-.1-2.4-.1-2.4 0-4.1 1.5-4.1 4.2v2.3H7.5V14h2.8v8h3.2z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-brand flex items-center justify-center">
+            <svg class="w-4 h-4" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="white"/></svg>
+          </a>
+          <a href="#" aria-label="X" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-brand flex items-center justify-center">
+            <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M17.8 3h3.1l-6.8 7.7L22 21h-6.2l-4.9-6.3L5.3 21H2.2l7.3-8.3L2 3h6.3l4.4 5.8L17.8 3zm-1.1 16.2h1.7L7.4 4.7H5.6l11.1 14.5z"/></svg>
+          </a>
+          <a href="#" aria-label="LinkedIn" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-brand flex items-center justify-center">
+            <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.01 5 2.5 2.5 0 01.01-5zM3 9.5h4V21H3V9.5zm6.5 0h3.8v1.6h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6.1V21h-4v-5.1c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4V9.5z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <p class="text-white font-bold mb-3">Explore</p>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#listings" class="hover:text-white">Homes for Sale</a></li>
+          <li><a href="#listings" class="hover:text-white">Rentals</a></li>
+          <li><a href="#contact" class="hover:text-white">Post a Listing</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-white font-bold mb-3">Company</p>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#about" class="hover:text-white">About Us</a></li>
+          <li><a href="#contact" class="hover:text-white">Contact</a></li>
+          <li><a href="#" class="hover:text-white">Careers</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-white font-bold mb-3">Legal</p>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+          <li><a href="#" class="hover:text-white">Terms of Use</a></li>
+          <li><a href="#" class="hover:text-white">Fair Housing</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-slate-800 py-5 text-center text-xs">
+      &copy; <span id="year"></span> Zillion Homes. All rights reserved. Equal Housing Opportunity.
+    </div>
+  </footer>
+
+  <script>
+    // ---------- LISTING DATA ----------
+    // prefix: photo file prefix (house1 -> house1_1.jpg ... house1_N.jpg), photos: how many photos
+    const listings = [
+      { id: 1, prefix: 'house1', photos: 22, status: 'buy',  type: 'house',     price: '$30,000',
+        beds: '3', baths: '2', address: 'W Seneca Dr, Appleton, WI 54914',
+        desc: 'Three-bedroom home with two full baths, a great opportunity for first-time buyers or investors.' },
+      { id: 2, prefix: 'house2', photos: 11, status: 'rent', type: 'apartment', price: '$1,311', per: '/mo',
+        beds: '1', baths: '1', address: 'Adleta Blvd, Dallas, TX',
+        desc: 'Comfortable one-bedroom apartment with a convenient Dallas location and easy access to major roads.' },
+      { id: 3, prefix: 'house3', photos: 12, status: 'rent', type: 'apartment', price: '$1,500', per: '/mo',
+        beds: '2', baths: '1', address: 'Melody Parc, 5951 Melody Ln, Dallas, TX',
+        desc: 'Spacious two-bedroom apartment at Melody Parc, a great fit for roommates or small families.' }
+    ];
+
+    const grid = document.getElementById('grid');
+    const noResults = document.getElementById('noResults');
+    const count = document.getElementById('count');
+    const label = { buy: 'For Sale', rent: 'For Rent' };
+    const state = {};                      // current photo index per listing
+    const src = (l, i) => `${l.prefix}_${i + 1}.jpg`;
+
+    const chevL = '<svg class="w-5 h-5" fill="none" stroke="#0f172a" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 5l-7 7 7 7"/></svg>';
+    const chevR = '<svg class="w-5 h-5" fill="none" stroke="#0f172a" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>';
+
+    function card(l) {
+      state[l.id] = 0;
+      const thumbs = Array.from({ length: l.photos }, (_, i) => `
+        <button type="button" data-id="${l.id}" data-i="${i}" aria-label="Photo ${i + 1}"
+                class="thumb ph shrink-0 w-16 h-12 rounded-md overflow-hidden opacity-70 hover:opacity-100 ${i === 0 ? 'thumb-on' : ''}">
+          <img src="${src(l, i)}" alt="" class="w-full h-full object-cover" loading="lazy" onerror="this.style.opacity=0" />
+        </button>`).join('');
+
+      return `
+      <article class="listing bg-white rounded-2xl shadow-sm hover:shadow-xl transition overflow-hidden border border-slate-200 flex flex-col"
+               data-status="${l.status}" data-type="${l.type}" data-search="${(l.address + ' ' + l.type + ' ' + l.status).toLowerCase()}">
+        <div class="gallery relative ph select-none" data-id="${l.id}">
+          <img id="main-${l.id}" src="${src(l, 0)}" alt="Photo 1 of ${l.address}" class="w-full h-60 sm:h-56 object-cover" onerror="this.style.opacity=0" draggable="false" />
+          <span class="absolute top-3 left-3 bg-white text-xs font-bold px-3 py-1 rounded-full shadow">${label[l.status]}</span>
+          <span class="absolute top-3 right-3 bg-slate-900/70 text-white text-xs font-semibold px-3 py-1 rounded-full capitalize">${l.type}</span>
+          <button type="button" data-id="${l.id}" data-dir="-1" aria-label="Previous photo"
+                  class="arrow absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full shadow flex items-center justify-center">${chevL}</button>
+          <button type="button" data-id="${l.id}" data-dir="1" aria-label="Next photo"
+                  class="arrow absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full shadow flex items-center justify-center">${chevR}</button>
+          <span id="counter-${l.id}" class="absolute bottom-3 right-3 bg-black/65 text-white text-xs font-semibold px-2.5 py-1 rounded-full">1 / ${l.photos}</span>
+        </div>
+        <div id="strip-${l.id}" class="strip flex gap-1.5 overflow-x-auto p-2 bg-white">${thumbs}</div>
+        <div class="px-5 pb-5 pt-2 flex flex-col flex-1">
+          <p class="text-2xl font-extrabold">${l.price}<span class="text-sm font-medium text-slate-500">${l.per || ''}</span></p>
+          <p class="mt-1 text-sm font-semibold text-slate-700">${l.beds} bd &nbsp;|&nbsp; ${l.baths} ba</p>
+          <p class="mt-1 text-sm text-slate-500">${l.address}</p>
+          <p class="mt-3 text-sm text-slate-600 flex-1">${l.desc}</p>
+          <a href="#contact" data-pick="${l.id}" class="pick mt-4 block text-center bg-brand-light text-brand font-semibold py-2.5 rounded-lg hover:bg-brand hover:text-white transition">Inquire</a>
+        </div>
+      </article>`;
+    }
+    grid.innerHTML = listings.map(card).join('');
+
+    // ---------- GALLERY SLIDER ----------
+    function show(id, index) {
+      const l = listings.find(x => x.id === id);
+      const n = l.photos;
+      index = (index + n) % n;             // wrap around
+      state[id] = index;
+
+      const main = document.getElementById('main-' + id);
+      main.style.opacity = 1;
+      main.src = src(l, index);
+      main.alt = `Photo ${index + 1} of ${l.address}`;
+      document.getElementById('counter-' + id).textContent = `${index + 1} / ${n}`;
+
+      const strip = document.getElementById('strip-' + id);
+      strip.querySelectorAll('.thumb').forEach((t, i) => t.classList.toggle('thumb-on', i === index));
+      const t = strip.children[index];
+      strip.scrollTo({ left: t.offsetLeft - strip.clientWidth / 2 + t.clientWidth / 2, behavior: 'smooth' });
+
+      // preload neighbors for smoother flipping
+      [index + 1, index - 1].forEach(j => { new Image().src = src(l, (j + n) % n); });
+    }
+
+    grid.addEventListener('click', e => {
+      const arrow = e.target.closest('.arrow');
+      if (arrow) {
+        const id = +arrow.dataset.id;
+        show(id, state[id] + +arrow.dataset.dir);
+        return;
+      }
+      const thumb = e.target.closest('.thumb');
+      if (thumb) show(+thumb.dataset.id, +thumb.dataset.i);
+    });
+
+    // Swipe support on touch screens
+    let startX = 0, startY = 0;
+    grid.addEventListener('touchstart', e => {
+      if (!e.target.closest('.gallery')) return;
+      startX = e.touches[0].clientX; startY = e.touches[0].clientY;
+    }, { passive: true });
+    grid.addEventListener('touchend', e => {
+      const g = e.target.closest('.gallery');
+      if (!g || e.target.closest('.arrow')) return;
+      const dx = e.changedTouches[0].clientX - startX;
+      const dy = e.changedTouches[0].clientY - startY;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+        const id = +g.dataset.id;
+        show(id, state[id] + (dx < 0 ? 1 : -1));
+      }
+    }, { passive: true });
+
+    // ---------- FILTERS + SEARCH ----------
+    let status = 'all', type = 'all', q = '';
+    function applyFilters() {
+      let shown = 0;
+      document.querySelectorAll('.listing').forEach(c => {
+        const ok = (status === 'all' || c.dataset.status === status)
+                && (type === 'all' || c.dataset.type === type)
+                && (!q || c.dataset.search.includes(q));
+        c.classList.toggle('hidden', !ok);
+        if (ok) shown++;
+      });
+      noResults.classList.toggle('hidden', shown > 0);
+      count.textContent = shown + (shown === 1 ? ' property' : ' properties');
+    }
+    function bindGroup(id, attr, setter) {
+      const group = document.getElementById(id);
+      group.addEventListener('click', e => {
+        const b = e.target.closest('.chip');
+        if (!b) return;
+        group.querySelectorAll('.chip').forEach(x => x.classList.remove('chip-on'));
+        b.classList.add('chip-on');
+        setter(b.dataset[attr]);
+        applyFilters();
+      });
+    }
+    bindGroup('statusGroup', 'status', v => status = v);
+    bindGroup('typeGroup', 'type', v => type = v);
+
+    document.getElementById('searchInput').addEventListener('input', e => { q = e.target.value.toLowerCase().trim(); applyFilters(); });
+    document.getElementById('searchForm').addEventListener('submit', e => {
+      e.preventDefault();
+      document.getElementById('listings').scrollIntoView({ behavior: 'smooth' });
+    });
+    applyFilters();
+
+    // ---------- CONTACT FORM DROPDOWN ----------
+    const sel = document.getElementById('property');
+    const optText = l => `${l.address} - ${l.price}${l.per || ''}`;
+    sel.innerHTML = '<option value="" disabled selected>Select an option</option>'
+      + listings.map(l => `<option value="${optText(l)}">${optText(l)}</option>`).join('')
+      + '<option value="General inquiry">General inquiry</option>'
+      + '<option value="I want to post a listing">I want to post a listing</option>';
+
+    grid.addEventListener('click', e => {
+      const p = e.target.closest('.pick');
+      if (!p) return;
+      sel.value = optText(listings.find(x => x.id == p.dataset.pick));
+    });
+    document.getElementById('postBtn').addEventListener('click', () => { sel.value = 'I want to post a listing'; });
+
+    // ---------- MOBILE MENU + YEAR ----------
+    const mobileMenu = document.getElementById('mobileMenu');
+    document.getElementById('menuBtn').addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
