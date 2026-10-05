@@ -1,0 +1,32 @@
+[
+  {
+    "prefix": "house1",
+    "status": "buy",
+    "type": "house",
+    "price": "$30,000",
+    "beds": "3",
+    "baths": "2",
+    "address": "W Seneca Dr, Appleton, WI 54914",
+    "desc": "Three-bedroom home with two full baths, a great opportunity for first-time buyers or investors."
+  },
+  {
+    "prefix": "house2",
+    "status": "rent",
+    "type": "apartment",
+    "price": "$1,311",
+    "beds": "1",
+    "baths": "1",
+    "address": "Adleta Blvd, Dallas, TX",
+    "desc": "Comfortable one-bedroom apartment with a convenient Dallas location and easy access to major roads."
+  },
+  {
+    "prefix": "house3",
+    "status": "rent",
+    "type": "apartment",
+    "price": "$1,500",
+    "beds": "2",
+    "baths": "1",
+    "address": "Melody Parc, 5951 Melody Ln, Dallas, TX",
+    "desc": "Spacious two-bedroom apartment at Melody Parc, a great fit for roommates or small families."
+  }
+]
