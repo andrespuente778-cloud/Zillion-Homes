@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inquiry Submitted | Zillion Homes</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/png" href="logo-icon.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        colors: { brand: { DEFAULT: '#006AFF', dark: '#0050C8', light: '#E8F1FF' } },
+        fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+      } }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    .page-bg { background: linear-gradient(180deg, #E8F1FF 0%, #f8fafc 55%); }
+    @keyframes pop  { 0% { transform: scale(.6); opacity: 0; } 60% { transform: scale(1.08); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+    @keyframes halo { 0% { transform: scale(.9); opacity: .55; } 100% { transform: scale(1.7); opacity: 0; } }
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+    .check-wrap { animation: pop .6s cubic-bezier(.2, .9, .3, 1.2) both; }
+    .check-ring { stroke-dasharray: 289; stroke-dashoffset: 289; animation: draw .7s ease-out .15s forwards; }
+    .check-tick { stroke-dasharray: 64;  stroke-dashoffset: 64;  animation: draw .45s ease-out .8s forwards; }
+    .halo { animation: halo 1.6s ease-out .9s 2 both; }
+    .rise { opacity: 0; animation: rise .6s ease-out forwards; }
+    .d1 { animation-delay: .9s; } .d2 { animation-delay: 1.05s; } .d3 { animation-delay: 1.2s; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+      .check-ring, .check-tick { stroke-dashoffset: 0; }
+      .rise { opacity: 1; }
+    }
+  </style>
+</head>
+<body class="font-sans text-slate-800 bg-slate-50 antialiased min-h-screen flex flex-col">
+
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center">
+      <a href="/" class="flex items-center gap-2 shrink-0">
+        <img src="logo-icon.png" alt="Zillion Homes logo" class="h-10 w-auto" onerror="this.style.display='none'" />
+        <span class="text-lg sm:text-xl font-extrabold text-brand tracking-tight">Zillion Homes</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="page-bg flex-1 flex items-center justify-center px-4 py-12 sm:py-16">
+    <div class="w-full max-w-lg bg-white rounded-3xl shadow-xl border border-slate-200 px-6 sm:px-10 py-12 text-center">
+
+      <div class="relative mx-auto w-28 h-28 check-wrap">
+        <span class="halo absolute inset-0 rounded-full bg-green-400/40"></span>
+        <svg class="relative w-28 h-28" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+          <circle cx="50" cy="50" r="46" fill="#F0FDF4" />
+          <circle class="check-ring" cx="50" cy="50" r="46" stroke="#22C55E" stroke-width="5" stroke-linecap="round" transform="rotate(-90 50 50)" />
+          <path class="check-tick" d="M30 52 L44 66 L71 36" stroke="#16A34A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+
+      <h1 class="rise d1 mt-8 text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight">Inquiry Submitted Successfully!</h1>
+
+      <p class="rise d2 mt-4 text-slate-500 leading-relaxed">
+        Thank you for reaching out to Zillion Homes. We've received your message and will get back to you shortly.
+      </p>
+
+      <a href="/" class="rise d3 mt-8 inline-flex items-center justify-center gap-2 bg-brand hover:bg-brand-dark text-white font-bold px-8 py-3.5 rounded-full shadow-lg shadow-blue-500/25 transition hover:-translate-y-0.5">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>
+        Back to Home
+      </a>
+    </div>
+  </main>
+
+  <footer class="bg-slate-900 text-slate-400">
+    <div class="max-w-6xl mx-auto px-4 py-5 text-center text-xs">
+      &copy; <span id="year"></span> Zillion Homes. All rights reserved. Equal Housing Opportunity.
+    </div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
