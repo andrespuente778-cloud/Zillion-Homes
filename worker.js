@@ -14,7 +14,7 @@ export default {
         // HARDCODED DESTINATION: Since Cloudflare blocks dashboard variables on static setups,
         // we put your verified routing destination email directly here.
         // CHANGE 'yourname@gmail.com' to your actual verified personal Gmail address!
-        const destinationEmail = "yourname@gmail.com"; 
+        const destinationEmail = "zilowrentalshome@gmail.com"; 
 
         // 2. Build the Raw Email Payload required by Cloudflare's Email Binding
         const emailContent = 
