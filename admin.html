@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Listing Maker | Zillion Market</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{brand:{DEFAULT:'#006AFF',dark:'#0050C8',light:'#E8F1FF'}}}}}</script>
+<style type="text/tailwindcss">
+.field{@apply w-full px-3 py-2.5 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-brand}
+.lbl{@apply block text-sm font-semibold mb-1}
+.btn{@apply bg-brand hover:bg-brand-dark text-white font-bold rounded-full px-6 py-3 text-center}
+</style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased" style="font-family:Inter,system-ui,sans-serif">
+<div class="max-w-2xl mx-auto px-4 py-8 space-y-6">
+ <div><h1 class="text-2xl font-extrabold text-brand">Listing Maker</h1>
+  <p class="text-sm text-slate-500 mt-1">Fill in an item, tap Add, then copy the finished list into GitHub. No typing of commas or brackets.</p></div>
+
+ <form id="f" class="bg-white border border-slate-200 rounded-2xl p-5 space-y-4 shadow-sm">
+  <div><label class="lbl">Item name <span class="font-normal text-slate-400">(cars, phones, TVs... leave empty for homes)</span></label><input id="title" class="field" placeholder="e.g. Samsung 55 inch Smart TV"></div>
+  <div class="grid grid-cols-2 gap-4">
+   <div><label class="lbl">Type *</label><input id="type" list="types" required class="field" placeholder="e.g. television"><datalist id="types"></datalist></div>
+   <div><label class="lbl">For *</label><select id="status" class="field"><option value="buy">Sale</option><option value="rent">Rent</option><option value="sold">Sold</option></select></div>
+  </div>
+  <div class="grid grid-cols-2 gap-4">
+   <div><label class="lbl">Price *</label><input id="price" required class="field" placeholder="$450"></div>
+   <div><label class="lbl">Rent charged</label><select id="per" class="field"><option value="/mo">per month</option><option value="/day">per day</option><option value="/week">per week</option><option value="/hr">per hour</option></select></div>
+  </div>
+  <div><label class="lbl">Details <span class="font-normal text-slate-400">(start with New or Used)</span></label><input id="specs" class="field" placeholder="Used · 55 inch · 4K · 1 year old"></div>
+  <div class="grid grid-cols-2 gap-4">
+   <div><label class="lbl">Bedrooms <span class="font-normal text-slate-400">(homes)</span></label><input id="beds" class="field" inputmode="numeric"></div>
+   <div><label class="lbl">Bathrooms <span class="font-normal text-slate-400">(homes)</span></label><input id="baths" class="field" inputmode="numeric"></div>
+  </div>
+  <div><label class="lbl">Location</label><input id="address" class="field" placeholder="Dallas, TX 75201"></div>
+  <div><label class="lbl">Description *</label><textarea id="desc" required rows="3" class="field" placeholder="Short and honest description"></textarea></div>
+  <div><label class="lbl">Photo name</label><input id="prefix" class="field" placeholder="filled in for you">
+   <p class="text-xs text-slate-400 mt-1">Photos must start with this, like <b>tv1_1.jpg</b>, <b>tv1_2.jpg</b>. Outside/inside shots can be <b>car1_ext1.jpg</b> and <b>car1_int1.jpg</b>.</p></div>
+  <button class="btn w-full">Add to list</button>
+  <p id="last" class="text-sm text-green-700 font-semibold"></p>
+ </form>
+
+ <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+  <h2 class="font-bold mb-3">Your listings (<span id="n">0</span>)</h2>
+  <ul id="items" class="divide-y divide-slate-100 text-sm"></ul>
+ </div>
+
+ <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3">
+  <h2 class="font-bold">Publish</h2>
+  <ol class="text-sm text-slate-600 list-decimal pl-5 space-y-1">
+   <li>Tap <b>Copy listings</b>.</li>
+   <li>Tap <b>Open listings.json</b>, select everything in the box, and paste.</li>
+   <li>Tap <b>Commit changes</b>. The site updates in about a minute.</li>
+   <li>Upload the photos to GitHub with the photo name above.</li>
+  </ol>
+  <div class="flex flex-col sm:flex-row gap-3"><button id="copy" type="button" class="btn">Copy listings</button><a id="gh" target="_blank" rel="noopener" class="btn bg-slate-800 hover:bg-slate-900">Open listings.json</a></div>
+  <textarea id="out" readonly rows="8" class="field font-mono text-xs"></textarea>
+ </div>
+</div>
+
+<script>
+const GH={owner:'andrespuente778-cloud',repo:'zillion-homes',branch:'main'}; // your GitHub repo
+const TYPES=['house','apartment','car','phone','television','game console','sewing machine','bicycle','household item'];
+const $=id=>document.getElementById(id);let list=[];
+$('types').innerHTML=TYPES.map(t=>`<option value="${t}">`).join('');
+$('gh').href=`https://github.com/${GH.owner}/${GH.repo}/edit/${GH.branch}/listings.json`;
+fetch('listings.json',{cache:'no-store'}).then(r=>r.json()).then(d=>{list=Array.isArray(d)?d:[];render()}).catch(()=>{$('last').textContent="Couldn't load your current listings.json, so this list starts empty. Don't paste it over your real file.";$('last').className='text-sm text-red-600 font-semibold';render()});
+const nextPrefix=()=>{const base=$('type').value.toLowerCase().replace(/[^a-z0-9]/g,'')||'item',used=new Set(list.map(l=>l.prefix));let n=1;while(used.has(base+n))n++;return base+n};
+$('type').addEventListener('input',()=>{if(!$('prefix').dataset.t)$('prefix').value=nextPrefix()});
+$('prefix').addEventListener('input',()=>{$('prefix').dataset.t=1});
+$('f').addEventListener('submit',e=>{e.preventDefault();const g=id=>$(id).value.trim(),o={};
+ const put=(k,v)=>{if(v)o[k]=v};
+ o.prefix=g('prefix')||nextPrefix();o.status=g('status');o.type=g('type').toLowerCase();put('title',g('title'));o.price=g('price');
+ if(o.status==='rent')put('per',g('per'));put('specs',g('specs'));put('beds',g('beds'));put('baths',g('baths'));put('address',g('address'));o.desc=g('desc');
+ list.push(o);$('f').reset();delete $('prefix').dataset.t;$('last').className='text-sm text-green-700 font-semibold';
+ $('last').innerHTML=`Added! Now upload photos named <b>${o.prefix}_1.jpg</b>, <b>${o.prefix}_2.jpg</b> ... then copy the list below.`;render()});
+function render(){$('n').textContent=list.length;$('out').value=JSON.stringify(list,null,2);
+ $('items').innerHTML=list.map((l,i)=>`<li class="py-2 flex items-center justify-between gap-3"><span class="min-w-0"><b>${(l.title||l.address||l.prefix).replace(/</g,'&lt;')}</b> <span class="text-slate-400">· ${l.type} · ${l.price} · ${l.prefix}</span></span><button data-i="${i}" class="text-red-600 font-semibold shrink-0">Remove</button></li>`).join('')}
+$('items').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&confirm('Remove this listing from the list?')){list.splice(+b.dataset.i,1);render()}});
+$('copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('out').value)}catch(e){$('out').select();document.execCommand('copy')}$('copy').textContent='Copied!';setTimeout(()=>$('copy').textContent='Copy listings',1800)});
+render();
+</script>
+</body>
+</html>

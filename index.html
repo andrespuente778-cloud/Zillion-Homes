@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zillion Market | Buy & Rent Almost Anything</title>
+<meta name="description" content="Homes, cars, phones, electronics and more for sale and rent at Zillion Market.">
+<link rel="icon" type="image/png" href="logo-icon.png">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{brand:{DEFAULT:'#006AFF',dark:'#0050C8',light:'#E8F1FF'}},fontFamily:{sans:['Inter','system-ui','sans-serif']}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style type="text/tailwindcss">
+.btn{@apply bg-brand hover:bg-brand-dark text-white font-bold rounded-full transition}
+.field{@apply w-full px-4 py-3 rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-brand}
+.lbl{@apply block text-sm font-semibold mb-1.5}
+.chip{@apply px-5 py-2 rounded-full border border-slate-300 text-sm font-semibold capitalize whitespace-nowrap hover:border-brand}
+.chip-on{@apply bg-brand text-white border-brand}
+.fl a{@apply hover:text-white}
+</style>
+<style>
+html{scroll-behavior:smooth}
+.hero{background:linear-gradient(rgba(8,20,45,.58),rgba(8,20,45,.58)),url('hero.jpg') center/cover #1e3a5f}
+.ph{background:linear-gradient(135deg,#dbe7f7,#b9cfe9)}
+.thumb-on{outline:3px solid #006AFF;outline-offset:-3px;opacity:1!important}
+.strip{scrollbar-width:none}.strip::-webkit-scrollbar{display:none}
+.arrow{background:rgba(255,255,255,.92)}
+.sg-on{background:#E8F1FF}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.animate-fade-in{animation:fadeIn .5s ease-out both}
+@keyframes pop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+@keyframes draw{to{stroke-dashoffset:0}}
+.ck{animation:pop .6s cubic-bezier(.2,.9,.3,1.2) both}
+.ck-r{stroke-dasharray:289;stroke-dashoffset:289;animation:draw .7s ease-out .15s forwards}
+.ck-t{stroke-dasharray:64;stroke-dashoffset:64;animation:draw .45s ease-out .8s forwards}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}.ck-r,.ck-t{stroke-dashoffset:0}}
+</style>
+</head>
+<body class="font-sans text-slate-800 bg-slate-50 antialiased">
+
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200">
+ <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
+  <a href="#top" class="flex items-center gap-2 shrink-0"><img src="logo-icon.png" alt="" class="h-10" onerror="this.style.display='none'"><span class="text-lg sm:text-xl font-extrabold text-brand">Zillion Market</span></a>
+  <nav class="hidden md:flex gap-8 text-sm font-semibold">
+   <a href="#listings" data-go="buy" class="hover:text-brand">Buy</a><a href="#listings" data-go="rent" class="hover:text-brand">Rent</a><a href="#" data-page="about" class="hover:text-brand">About</a><a href="#contact" class="hover:text-brand">Contact</a>
+  </nav>
+  <div class="flex items-center gap-2">
+   <a href="#contact" class="postlink btn text-xs sm:text-sm px-4 py-2 whitespace-nowrap">Post a Listing</a>
+   <button id="menuBtn" class="md:hidden p-2" aria-label="Menu"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  </div>
+ </div>
+ <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 bg-white px-4 py-2 flex flex-col text-sm font-semibold">
+  <a href="#listings" data-go="buy" class="py-3 border-b">Buy</a><a href="#listings" data-go="rent" class="py-3 border-b">Rent</a><a href="#" data-page="about" class="py-3 border-b">About</a><a href="#contact" class="py-3">Contact</a>
+ </div>
+</header>
+
+<main id="top">
+<section class="hero"><div class="max-w-6xl mx-auto px-4 py-20 sm:py-32 text-center">
+ <h1 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">Buy and rent almost anything</h1>
+ <p class="mt-4 text-white/90 max-w-2xl mx-auto">Homes, cars, phones, electronics and more, for sale and rent.</p>
+ <div class="relative mt-8 max-w-2xl mx-auto text-left">
+  <form id="searchForm" autocomplete="off" class="bg-white rounded-full shadow-2xl flex items-center p-1.5 sm:p-2">
+   <input id="searchInput" autocomplete="off" placeholder="Item, city or ZIP (phone, car, Dallas...)" class="flex-1 min-w-0 px-4 py-3 text-sm sm:text-base bg-transparent focus:outline-none">
+   <button type="button" id="clearBtn" aria-label="Clear" class="hidden w-8 h-8 mr-1 rounded-full text-slate-400 hover:bg-slate-100">&times;</button>
+   <button class="btn px-6 sm:px-8 py-3 text-sm sm:text-base">Search</button>
+  </form>
+  <ul id="suggest" class="hidden absolute left-0 right-0 top-full mt-2 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-40 max-h-80 overflow-y-auto"></ul>
+ </div>
+</div></section>
+
+<section class="bg-white border-b border-slate-200"><div class="max-w-6xl mx-auto px-4 py-5 space-y-3">
+ <div id="statusGroup" class="flex items-center gap-2 overflow-x-auto"><span class="text-xs font-bold uppercase text-slate-400 mr-1">Status</span>
+  <button data-status="all" class="chip chip-on">All</button><button data-status="buy" class="chip">Buy</button><button data-status="rent" class="chip">Rent</button></div>
+ <div id="typeGroup" class="flex items-center gap-2 overflow-x-auto"></div>
+</div></section>
+
+<section id="listings" class="max-w-6xl mx-auto px-4 py-12">
+ <div class="flex items-end justify-between mb-8"><h2 class="text-2xl sm:text-3xl font-extrabold">Featured Listings</h2><p id="count" class="text-sm font-semibold text-slate-500"></p></div>
+ <div id="areaNotice" class="hidden mb-6 bg-brand-light border border-blue-200 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+  <p id="areaMsg" class="font-semibold text-slate-700"></p><a href="#contact" id="areaCta" class="btn text-sm px-5 py-2.5 text-center">Tell us what you need</a></div>
+ <div id="grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
+ <div id="noResults" class="hidden text-center mt-10"><p id="noMsg" class="text-slate-500"></p><a href="#contact" id="noCta" class="btn inline-block mt-4 px-6 py-3">Tell us what you need</a></div>
+</section>
+
+<section id="contact" class="bg-white border-t border-slate-200"><div class="max-w-2xl mx-auto px-4 py-12 sm:py-16">
+ <div class="text-center mb-8"><h2 class="text-2xl sm:text-3xl font-extrabold">Request Information</h2>
+  <p class="text-slate-500 mt-2">Interested in something, or want to post your own? Send a message and we'll reply shortly.</p></div>
+
+ <div id="formWrap">
+  <div id="formNotice" class="hidden mb-6 rounded-xl p-4 text-sm font-semibold border bg-red-50 text-red-700 border-red-200"></div>
+  <form id="inquiryForm" action="/api/submit" method="POST" class="bg-slate-50 border border-slate-200 rounded-2xl p-5 sm:p-8 shadow-sm space-y-5">
+   <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+   <div><label class="lbl" for="name">Full Name</label><input class="field" id="name" name="name" required placeholder="Jane Smith"></div>
+   <div class="grid sm:grid-cols-2 gap-5">
+    <div><label class="lbl" for="email">Email</label><input class="field" id="email" name="email" type="email" required placeholder="you@email.com"></div>
+    <div><label class="lbl" for="phone">Phone</label><input class="field" id="phone" name="phone" type="tel" placeholder="(555) 123-4567"></div>
+   </div>
+   <div><label class="lbl" for="property">I'm interested in</label><select class="field" id="property" name="property" required></select></div>
+   <div><label class="lbl" for="message">Message</label><textarea class="field" id="message" name="message" rows="5" required placeholder="Tell us how we can help..."></textarea></div>
+   <button id="sendBtn" type="submit" class="btn w-full py-3.5 rounded-lg disabled:opacity-60">Send Inquiry</button>
+  </form>
+ </div>
+
+ <div id="successView" class="hidden flex flex-col items-center justify-center text-center py-12 px-4 animate-fade-in">
+  <div class="ck w-28 h-28 rounded-full bg-green-50 ring-8 ring-green-100/70">
+   <svg viewBox="0 0 100 100" fill="none" class="w-28 h-28"><circle class="ck-r" cx="50" cy="50" r="46" stroke="#22C55E" stroke-width="5" stroke-linecap="round" transform="rotate(-90 50 50)"/><path class="ck-t" d="M30 52 L44 66 L71 36" stroke="#16A34A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <h3 class="mt-8 text-2xl sm:text-3xl font-extrabold text-slate-900">Inquiry Submitted Successfully!</h3>
+  <p class="mt-3 text-slate-500 max-w-md">Thank you for reaching out to Zillion Market. We've received your message and will get back to you shortly.</p>
+  <a href="#listings" id="backBtn" class="btn mt-8 px-8 py-3.5 shadow-lg shadow-blue-500/25">Back to Listings</a>
+ </div>
+</div></section>
+</main>
+
+<footer class="bg-slate-900 text-slate-400 fl"><div class="max-w-6xl mx-auto px-4 py-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+ <div><p class="text-white font-extrabold text-xl">Zillion Market</p><p class="mt-3 text-sm">Homes, cars, phones, electronics and more, for sale and rent.</p>
+  <div id="socialRow" class="flex flex-wrap gap-4 mt-4 text-sm"><a data-social="facebook" href="#">Facebook</a><a data-social="instagram" href="#">Instagram</a><a data-social="x" href="#">X</a><a data-social="linkedin" href="#">LinkedIn</a></div></div>
+ <div><p class="text-white font-bold mb-3">Explore</p><ul class="space-y-2 text-sm"><li><a href="#listings" data-go="buy">For Sale</a></li><li><a href="#listings" data-go="rent">For Rent</a></li><li><a href="#contact" class="postlink">Post a Listing</a></li></ul></div>
+ <div><p class="text-white font-bold mb-3">Company</p><ul class="space-y-2 text-sm"><li><a href="#" data-page="about">About Us</a></li><li><a href="#contact">Contact</a></li><li><a href="#" data-page="careers">Careers</a></li></ul></div>
+ <div><p class="text-white font-bold mb-3">Legal</p><ul class="space-y-2 text-sm"><li><a href="#" data-page="privacy">Privacy Policy</a></li><li><a href="#" data-page="terms">Terms of Use</a></li><li><a href="#" data-page="fair">Fair Housing</a></li></ul></div>
+</div><div class="border-t border-slate-800 py-5 text-center text-xs">&copy; <span id="year"></span> Zillion Market. All rights reserved.</div></footer>
+
+<div id="modal" class="fixed inset-0 z-[60] hidden"><div id="modalBg" class="absolute inset-0 bg-slate-900/60"></div>
+ <div class="relative h-full flex items-end sm:items-center justify-center sm:p-6 pointer-events-none">
+  <div class="pointer-events-auto bg-white w-full sm:max-w-2xl max-h-[88vh] rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col">
+   <div class="flex items-center justify-between px-5 py-4 border-b"><h3 id="modalTitle" class="text-lg font-extrabold"></h3><button id="modalClose" aria-label="Close" class="w-9 h-9 rounded-full hover:bg-slate-100 text-xl">&times;</button></div>
+   <div id="modalBody" class="px-5 py-5 overflow-y-auto text-sm text-slate-600 leading-relaxed space-y-3"></div>
+  </div></div></div>
+
+<script>
+const SOCIAL={facebook:'',instagram:'',x:'',linkedin:''}; // paste your page links between the quotes
+const GH={owner:'andrespuente778-cloud',repo:'zillion-homes',branch:'main'}; // your GitHub repo (finds your photos)
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const norm=s=>(s||'').toLowerCase().replace(/,/g,' ').replace(/\s+/g,' ').trim();
+const ST={};'Alabama:AL,Alaska:AK,Arizona:AZ,Arkansas:AR,California:CA,Colorado:CO,Connecticut:CT,Delaware:DE,Florida:FL,Georgia:GA,Hawaii:HI,Idaho:ID,Illinois:IL,Indiana:IN,Iowa:IA,Kansas:KS,Kentucky:KY,Louisiana:LA,Maine:ME,Maryland:MD,Massachusetts:MA,Michigan:MI,Minnesota:MN,Mississippi:MS,Missouri:MO,Montana:MT,Nebraska:NE,Nevada:NV,New Hampshire:NH,New Jersey:NJ,New Mexico:NM,New York:NY,North Carolina:NC,North Dakota:ND,Ohio:OH,Oklahoma:OK,Oregon:OR,Pennsylvania:PA,Rhode Island:RI,South Carolina:SC,South Dakota:SD,Tennessee:TN,Texas:TX,Utah:UT,Vermont:VT,Virginia:VA,Washington:WA,West Virginia:WV,Wisconsin:WI,Wyoming:WY,District of Columbia:DC'.split(',').forEach(s=>{const[n,a]=s.split(':');ST[n]=a});
+const stName=a=>Object.keys(ST).find(k=>ST[k]===a)||a;
+
+document.querySelectorAll('[data-social]').forEach(a=>{let u=(SOCIAL[a.dataset.social]||'').trim();if(!u){a.style.display='none';return}if(!/^https?:\/\//i.test(u))u='https://'+u;a.href=u;a.target='_blank';a.rel='noopener'});
+if(!Object.values(SOCIAL).some(v=>v.trim()))$('socialRow').style.display='none';
+$('year').textContent=new Date().getFullYear();
+
+let listings=[],status='all',type='all',place=null,q='',rendered=false;const pos={};
+const CATS=['house','apartment','car','phone','television','game console','sewing machine','bicycle','household item'];
+const grid=$('grid');
+
+function normalize(r,i){const l=Object.assign({},r);l.id=i+1;
+ l.status=/sold/i.test(l.status||'')?'sold':/rent|lease/i.test(l.status||'')?'rent':'buy';l.type=String(l.type||'item').toLowerCase().trim();
+ l.prefix=String(l.prefix||'').trim();l.title=String(l.title||'');l.specs=String(l.specs||'');l.address=String(l.address||'');
+ l.beds=l.beds==null?'':String(l.beds);l.baths=l.baths==null?'':String(l.baths);
+ const m=l.address.match(/,\s*([^,]+?),\s*([A-Za-z]{2})\s*(\d{5})?\s*$/)||l.address.match(/^\s*([^,]+?),\s*([A-Za-z]{2})\s*(\d{5})?\s*$/);
+ l.city=String(l.city||(m?m[1].trim():''));l.abbr=String(l.abbr||(m?m[2].toUpperCase():''));l.zip=String(l.zip||(m&&m[3]?m[3]:''));
+ l.per=l.per!=null?String(l.per):(l.status==='rent'?'/mo':'');l.files=[];
+ l.hay=norm(`${l.title} ${l.specs} ${l.address} ${l.city} ${l.abbr} ${stName(l.abbr)} ${l.zip} ${l.type} ${l.status}`);return l}
+
+// ---- find photos in your GitHub repo (house1_ext1.jpg, phone1_2.jpg, ...) ----
+const IMG=/\.(jpe?g|png|webp|heic|gif)\b/i,url=n=>encodeURIComponent(n),kind=s=>/ext/i.test(s)?'Exterior':/int/i.test(s)?'Interior':'';
+const sorter=p=>{const k=n=>{const r=n.slice(p.length).replace(/^[^a-z0-9]+/i,''),m=r.match(/\d+/);return[/^ext/i.test(r)?0:/^int/i.test(r)?1:2,m?+m[0]:0]};return(a,b)=>{const x=k(a),y=k(b);return x[0]-y[0]||x[1]-y[1]||a.localeCompare(b)}};
+async function discover(){let names=[];
+ try{const c=JSON.parse(sessionStorage.getItem('zm')||'null');if(c&&Date.now()-c.t<30000)names=c.n}catch(e){}
+ if(!names.length)try{const r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents?ref=${GH.branch}`);
+  if(r.ok){names=(await r.json()).filter(x=>x.type==='file'&&IMG.test(x.name)).map(x=>x.name);try{sessionStorage.setItem('zm',JSON.stringify({t:Date.now(),n:names}))}catch(e){}}}catch(e){}
+ listings.forEach(l=>{if(!l.prefix)return;const re=new RegExp('^'+l.prefix.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![0-9])','i');
+  l.files=names.filter(n=>re.test(n)).sort(sorter(l.prefix)).map(n=>({u:url(n),k:kind(n.slice(l.prefix.length))}))});
+ const h=names.find(n=>/^hero/i.test(n));if(h)document.querySelector('.hero').style.backgroundImage=`linear-gradient(rgba(8,20,45,.58),rgba(8,20,45,.58)),url('${url(h)}')`}
+
+// ---- cards + slider ----
+const chev=d=>`<svg class="w-5 h-5" fill="none" stroke="#0f172a" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="${d}"/></svg>`;
+const ctext=(l,i)=>`${l.files[i].k?l.files[i].k+' · ':''}${i+1} / ${l.files.length}`;
+const num=v=>/^\d+(\.\d+)?$/.test(v);
+function card(l){pos[l.id]=0;const n=l.files.length;
+ const badges=`<span class="absolute top-3 left-3 bg-white text-xs font-bold px-3 py-1 rounded-full shadow">${l.status==='rent'?'For Rent':l.status==='sold'?'Sold':'For Sale'}</span><span class="absolute top-3 right-3 bg-slate-900/70 text-white text-xs font-semibold px-3 py-1 rounded-full capitalize">${esc(l.type)}</span>`;
+ const top=n?`<div class="gallery relative ph select-none" data-id="${l.id}"><img id="m${l.id}" src="${l.files[0].u}" alt="" class="w-full h-60 sm:h-56 object-cover" onerror="this.style.opacity=0" draggable="false">${badges}
+  <button data-id="${l.id}" data-dir="-1" aria-label="Previous" class="arrow absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full shadow flex items-center justify-center">${chev('M15 5l-7 7 7 7')}</button>
+  <button data-id="${l.id}" data-dir="1" aria-label="Next" class="arrow absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full shadow flex items-center justify-center">${chev('M9 5l7 7-7 7')}</button>
+  <span id="c${l.id}" class="absolute bottom-3 right-3 bg-black/65 text-white text-xs font-semibold px-2.5 py-1 rounded-full">${ctext(l,0)}</span></div>
+  <div id="s${l.id}" class="strip flex gap-1.5 overflow-x-auto p-2">${l.files.map((f,i)=>`<button data-id="${l.id}" data-i="${i}" class="thumb ph shrink-0 w-16 h-12 rounded-md overflow-hidden opacity-70 ${i?'':'thumb-on'}"><img src="${f.u}" alt="" loading="lazy" class="w-full h-full object-cover" onerror="this.style.opacity=0"></button>`).join('')}</div>`
+ :`<div class="relative ph h-60 sm:h-56 flex items-center justify-center text-sm font-semibold text-slate-500">Photos coming soon${badges}</div>`;
+ const bb=l.specs?esc(l.specs):[num(l.beds)?l.beds+' bd':esc(l.beds),num(l.baths)?l.baths+' ba':esc(l.baths)].filter(Boolean).join(' &nbsp;|&nbsp; ');
+ return`<article class="listing bg-white rounded-2xl shadow-sm hover:shadow-xl transition overflow-hidden border border-slate-200 flex flex-col" data-id="${l.id}">${top}
+ <div class="px-5 pb-5 pt-3 flex flex-col flex-1"><p class="text-2xl font-extrabold">${esc(l.price)}<span class="text-sm font-medium text-slate-500">${esc(l.per)}</span></p>
+ ${l.title?`<p class="mt-1 font-bold">${esc(l.title)}</p>`:''}<p class="mt-1 text-sm font-semibold text-slate-700">${bb}</p><p class="mt-1 text-sm text-slate-500">${esc(l.address)}</p>
+ <p class="mt-3 text-sm text-slate-600 flex-1">${esc(l.desc)}</p><a href="#contact" data-pick="${l.id}" class="pick mt-4 block text-center bg-brand-light text-brand font-semibold py-2.5 rounded-lg hover:bg-brand hover:text-white transition">Inquire</a></div></article>`}
+function renderAll(){grid.innerHTML=listings.map(card).join('');rendered=true;applyFilters()}
+function show(id,i){const l=listings.find(x=>x.id===id),n=l.files.length;i=(i+n)%n;pos[id]=i;
+ const m=$('m'+id);m.style.opacity=1;m.src=l.files[i].u;$('c'+id).textContent=ctext(l,i);
+ const s=$('s'+id);s.querySelectorAll('.thumb').forEach((t,k)=>t.classList.toggle('thumb-on',k===i));const t=s.children[i];
+ s.scrollTo({left:t.offsetLeft-s.clientWidth/2+t.clientWidth/2,behavior:'smooth'});[i+1,i-1].forEach(j=>{new Image().src=l.files[(j+n)%n].u})}
+grid.addEventListener('click',e=>{const a=e.target.closest('.arrow');if(a){const id=+a.dataset.id;show(id,pos[id]+ +a.dataset.dir);return}
+ const t=e.target.closest('.thumb');if(t)show(+t.dataset.id,+t.dataset.i);
+ const p=e.target.closest('.pick');if(p)$('property').value=optText(listings.find(x=>x.id==p.dataset.pick))});
+let sx=0,sy=0;grid.addEventListener('touchstart',e=>{if(e.target.closest('.gallery')){sx=e.touches[0].clientX;sy=e.touches[0].clientY}},{passive:true});
+grid.addEventListener('touchend',e=>{const g=e.target.closest('.gallery');if(!g||e.target.closest('.arrow'))return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;
+ if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){const id=+g.dataset.id;show(id,pos[id]+(dx<0?1:-1))}},{passive:true});
+
+// ---- filters ----
+const matchPlace=(l,p)=>p.kind==='state'?l.abbr===p.abbr:p.kind==='zip'?(l.zip&&l.zip===p.zip)||(l.city.toLowerCase()===p.name.toLowerCase()&&l.abbr===p.abbr):l.city&&l.city.toLowerCase()===p.name.toLowerCase()&&l.abbr===p.abbr;
+function applyFilters(){if(!document.querySelector('.listing'))return;
+ const base=l=>(status==='all'||l.status===status)&&(type==='all'||l.type===type),area=l=>place?matchPlace(l,place):(!q||l.hay.includes(q));
+ const act=!!(place||q),showAll=act&&!listings.some(l=>base(l)&&area(l));let shown=0;
+ document.querySelectorAll('.listing').forEach(c=>{const l=listings.find(x=>x.id==c.dataset.id),ok=base(l)&&(showAll||area(l));c.classList.toggle('hidden',!ok);if(ok)shown++});
+ $('areaNotice').classList.toggle('hidden',!showAll);
+ if(showAll)$('areaMsg').textContent=`We don't have anything for ${place?place.label:'"'+$('searchInput').value.trim()+'"'} yet. Here's what's available now, or tell us what you're looking for.`;
+ $('noResults').classList.toggle('hidden',shown>0);
+ if(!shown)$('noMsg').textContent=type!=='all'?`No ${type} listings yet. Tell us what you're looking for and we'll help you find it.`:'Nothing matches your filters. Try a different search.';$('count').textContent=shown+(shown===1?' item':' items')}
+function setStatus(v){status=v;document.querySelectorAll('#statusGroup .chip').forEach(x=>x.classList.toggle('chip-on',x.dataset.status===v));applyFilters()}
+$('statusGroup').addEventListener('click',e=>{const b=e.target.closest('.chip');if(b)setStatus(b.dataset.status)});
+function typeChips(){const ts=[...new Set([...CATS,...listings.map(l=>l.type)])];
+ if(listings.some(l=>l.status==='sold')&&!document.querySelector('[data-status=sold]'))$('statusGroup').insertAdjacentHTML('beforeend','<button data-status="sold" class="chip">Sold</button>');
+
+ $('typeGroup').innerHTML='<span class="text-xs font-bold uppercase text-slate-400 mr-1">Type</span>'+['all',...ts].map(t=>`<button data-type="${esc(t)}" class="chip ${t==='all'?'chip-on':''}">${esc(t)}</button>`).join('')}
+$('typeGroup').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;type=b.dataset.type;$('typeGroup').querySelectorAll('.chip').forEach(x=>x.classList.toggle('chip-on',x===b));applyFilters()});
+document.addEventListener('click',e=>{const a=e.target.closest('[data-go]');if(a){e.preventDefault();setStatus(a.dataset.go);$('listings').scrollIntoView({behavior:'smooth'})}});
+
+// ---- search suggestions (cities, states, ZIP codes) ----
+const inp=$('searchInput'),sg=$('suggest');let cur=[],act=-1,tm=null,ctl=null;
+async function remote(t){if(ctl)ctl.abort();ctl=new AbortController();const raw=t.trim();
+ if(/^\d{5}$/.test(raw)){const r=await fetch('https://api.zippopotam.us/us/'+raw,{signal:ctl.signal});if(!r.ok)return[];const d=await r.json();
+  return(d.places||[]).slice(0,1).map(p=>({kind:'zip',name:p['place name'],abbr:p['state abbreviation'],zip:raw,label:`${p['place name']}, ${p['state abbreviation']} ${raw}`}))}
+ const nm=raw.split(',')[0].trim();if(nm.length<2)return[];
+ const r=await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(nm)}&count=10&language=en&format=json&countryCode=US`,{signal:ctl.signal});if(!r.ok)return[];
+ return((await r.json()).results||[]).filter(x=>(x.feature_code||'').startsWith('PPL')&&ST[x.admin1]).map(x=>({kind:'city',name:x.name,abbr:ST[x.admin1],label:`${x.name}, ${ST[x.admin1]}`}))}
+function build(text,extra){const t=text.split(',')[0].trim().toLowerCase(),out=[],seen=new Set(),add=p=>{if(!seen.has(p.label)){seen.add(p.label);out.push(p)}};
+ listings.forEach(l=>{if(l.city&&l.city.toLowerCase().startsWith(t))add({kind:'city',name:l.city,abbr:l.abbr,label:`${l.city}, ${l.abbr}`});if(l.zip&&t.length>=3&&l.zip.startsWith(t))add({kind:'zip',name:l.city,abbr:l.abbr,zip:l.zip,label:`${l.city}, ${l.abbr} ${l.zip}`})});
+ if(t.length>=2)Object.keys(ST).filter(s=>s.toLowerCase().startsWith(t)).forEach(s=>add({kind:'state',name:s,abbr:ST[s],label:s}));extra.forEach(add);return out.slice(0,7)}
+function renderSg(list){cur=list;act=-1;if(!list.length){sg.classList.add('hidden');return}
+ sg.innerHTML=list.map((p,i)=>{const n=listings.filter(l=>matchPlace(l,p)).length;
+  return`<li data-i="${i}" class="sg flex items-center justify-between gap-3 px-4 py-3 cursor-pointer hover:bg-brand-light border-b border-slate-100"><span class="text-sm font-semibold truncate">${esc(p.label)}</span>${n?`<span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full whitespace-nowrap">${n} listing${n>1?'s':''}</span>`:'<span class="text-xs text-slate-400 whitespace-nowrap">No listings yet</span>'}</li>`}).join('');sg.classList.remove('hidden')}
+function choose(p){place=p;q='';inp.value=p.label;$('clearBtn').classList.remove('hidden');sg.classList.add('hidden');applyFilters();$('listings').scrollIntoView({behavior:'smooth'})}
+inp.addEventListener('input',()=>{const v=inp.value.trim();$('clearBtn').classList.toggle('hidden',!v);const had=place||q;place=null;q='';if(had)applyFilters();if(!v){sg.classList.add('hidden');return}
+ renderSg(build(v,[]));clearTimeout(tm);tm=setTimeout(async()=>{let x=[];try{x=await remote(v)}catch(e){if(e.name==='AbortError')return}if(inp.value.trim()===v)renderSg(build(v,x))},250)});
+inp.addEventListener('keydown',e=>{if(sg.classList.contains('hidden')||!cur.length)return;if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();act=(act+(e.key==='ArrowDown'?1:-1)+cur.length)%cur.length;sg.querySelectorAll('.sg').forEach((li,i)=>li.classList.toggle('sg-on',i===act))}else if(e.key==='Escape')sg.classList.add('hidden')});
+sg.addEventListener('mousedown',e=>e.preventDefault());sg.addEventListener('click',e=>{const li=e.target.closest('.sg');if(li)choose(cur[+li.dataset.i])});
+document.addEventListener('click',e=>{if(!e.target.closest('#suggest')&&e.target!==inp)sg.classList.add('hidden')});
+$('searchForm').addEventListener('submit',e=>{e.preventDefault();const v=inp.value.trim();if(!v){place=null;q='';applyFilters();return}
+ if(act>=0&&cur[act])return choose(cur[act]);if(cur[0]&&cur[0].label.toLowerCase().startsWith(v.toLowerCase()))return choose(cur[0]);
+ place=null;q=norm(v);sg.classList.add('hidden');applyFilters();$('listings').scrollIntoView({behavior:'smooth'})});
+$('clearBtn').addEventListener('click',()=>{inp.value='';place=null;q='';$('clearBtn').classList.add('hidden');sg.classList.add('hidden');applyFilters();inp.focus()});
+
+// ---- contact form (sent in the background, success view appears on the page) ----
+const sel=$('property'),optText=l=>`${l.title||l.address} - ${l.price}${l.per||''}`;
+function dropdown(){const o=(v)=>`<option value="${esc(v)}">${esc(v)}</option>`;
+ sel.innerHTML='<option value="" disabled selected>Select an option</option>'+listings.map(l=>o(optText(l))).join('')+o('Looking for something else')+o('General inquiry')+o('I want to post a listing')}
+document.querySelectorAll('.postlink').forEach(a=>a.addEventListener('click',()=>{sel.value='I want to post a listing'}));
+$('noCta').addEventListener('click',()=>{sel.value='Looking for something else';if(!$('message').value.trim())$('message').value=`I'm looking for: ${type!=='all'?type:inp.value.trim()}. Please let me know if it becomes available.`});
+$('areaCta').addEventListener('click',()=>{sel.value='Looking for something else';if(!$('message').value.trim())$('message').value=`I'm looking for: ${place?place.label:inp.value.trim()}. Please let me know if it becomes available.`});
+$('inquiryForm').addEventListener('submit',()=>{const b=$('sendBtn');b.disabled=true;b.textContent='Sending…'});
+addEventListener('pageshow',()=>{const b=$('sendBtn');b.disabled=false;b.textContent='Send Inquiry'});
+(()=>{const p=new URLSearchParams(location.search),n=$('formNotice');
+ if(p.has('sent')){$('formWrap').classList.add('hidden');$('successView').classList.remove('hidden');history.replaceState(null,'',location.pathname+'#contact');setTimeout(()=>$('successView').scrollIntoView({behavior:'smooth',block:'center'}),400)}
+ else if(p.has('error')){n.textContent="Sorry, your message couldn't be sent. Please try again in a moment.";n.classList.remove('hidden');history.replaceState(null,'',location.pathname+'#contact');setTimeout(()=>n.scrollIntoView({behavior:'smooth',block:'center'}),400)}})();
+$('backBtn').addEventListener('click',()=>{$('successView').classList.add('hidden');$('formWrap').classList.remove('hidden')});
+
+// ---- pop-up pages ----
+const cta='<a href="#contact" data-close class="btn inline-block mt-2 px-5 py-2.5">Contact us</a>',upd=new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'});
+const PAGES={
+ about:['About Us',`<p>Zillion Market is a place to buy and rent homes, cars, phones, electronics and more. Browse photos, filter by what you need, and send an inquiry straight from your phone.</p><p>Can't find something? Tell us what you're looking for and we'll keep an eye out. Every inquiry gets a personal reply.</p>${cta}`],
+ careers:['Careers',`<p>We don't have any open positions right now, but we'd love to hear from you. Send us a message and tell us about yourself.</p>${cta}`],
+ privacy:['Privacy Policy',`<p class="text-xs text-slate-400">Last updated: ${upd}</p><p><strong>What we collect.</strong> When you use the contact form we receive the name, email, phone number (optional), item of interest and message you send.</p><p><strong>How we use it.</strong> Only to respond to your inquiry. We do not sell your personal information.</p><p><strong>Search suggestions.</strong> Text typed in the search bar may be sent to third-party lookup services to suggest US cities and ZIP codes.</p><p><strong>Your choices.</strong> To have your information deleted, contact us through the form.</p>${cta}`],
+ terms:['Terms of Use',`<p class="text-xs text-slate-400">Last updated: ${upd}</p><p><strong>Information.</strong> Listings, prices, photos and descriptions are for general information. Items may be sold, rented or changed at any time, and we do not guarantee availability or accuracy.</p><p><strong>No contract.</strong> An inquiry is not a purchase, lease or rental agreement. Any agreement must be made separately and in writing.</p><p><strong>Use.</strong> Use this site lawfully and do not submit false or abusive information.</p><p><strong>Content.</strong> Site content and photos belong to Zillion Market or their owners and may not be reused without permission.</p><p><strong>Limitation.</strong> To the extent allowed by law, we are not liable for losses from using this site.</p>${cta}`],
+ fair:['Fair Housing',`<p><strong>Equal Housing Opportunity.</strong> We follow the federal Fair Housing Act, which prohibits discrimination in the sale, rental and financing of housing based on race, color, national origin, religion, sex, familial status or disability. State and local laws may protect additional groups.</p><p>To report housing discrimination, contact HUD at hud.gov/fairhousing or 1-800-669-9777.</p>${cta}`]};
+const modal=$('modal'),mm=$('mobileMenu');
+const closeModal=()=>{modal.classList.add('hidden');document.body.style.overflow=''};
+document.addEventListener('click',e=>{const a=e.target.closest('[data-page]');
+ if(a){e.preventDefault();mm.classList.add('hidden');const p=PAGES[a.dataset.page];$('modalTitle').textContent=p[0];$('modalBody').innerHTML=p[1];modal.classList.remove('hidden');document.body.style.overflow='hidden';return}
+ if(e.target.closest('[data-close]'))closeModal()});
+$('modalClose').onclick=closeModal;$('modalBg').onclick=closeModal;document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+$('menuBtn').onclick=()=>mm.classList.toggle('hidden');mm.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mm.classList.add('hidden')));
+
+// ---- start ----
+(async()=>{grid.innerHTML='<p class="col-span-full text-center text-slate-500 py-10">Loading listings…</p>';
+ try{const r=await fetch('listings.json',{cache:'no-store'});if(!r.ok)throw new Error(`Couldn't find listings.json (error ${r.status}). Upload it next to index.html.`);
+  let d;try{d=JSON.parse(await r.text())}catch(e){throw new Error('listings.json has a typo (usually a missing or extra comma, quote or bracket): '+e.message)}
+  if(!Array.isArray(d))throw new Error('listings.json must start with [ and end with ].');listings=d.map(normalize)}
+ catch(e){grid.innerHTML=`<div class="col-span-full bg-red-50 border border-red-200 text-red-700 rounded-2xl p-5 text-sm"><p class="font-bold mb-1">The listings couldn't load</p><p>${esc(e.message)}</p></div>`;return}
+ typeChips();dropdown();const done=discover().then(renderAll);await Promise.race([done,new Promise(r=>setTimeout(r,4000))]);if(!rendered)renderAll()})();
+</script>
+</body>
+</html>
